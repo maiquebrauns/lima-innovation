@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Rounded Background Container -->
+  <rect width="64" height="64" rx="14" fill="#1F2523"/>
+  
+  <!-- Architectural Mountain Peaks & House Rooflines -->
+  <path d="M10 46L26 18L38 34L46 22L54 46" stroke="#8A6A4A" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M22 46L28 37L34 46" stroke="#D8D0C3" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  
+  <!-- Chimney / Clean Accent -->
+  <line x1="42" y1="20" x2="42" y2="15" stroke="#8A6A4A" stroke-width="3.5" stroke-linecap="round"/>
+</svg>

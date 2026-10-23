@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --color-forest: #1F302B;
+    --color-forest-dark: #14211D;
+    --color-forest-light: #2D443D;
+    --color-warm-wood: #A45A2A;
+    --color-warm-wood-hover: #8B4A20;
+    --color-cream: #F8F6F0;
+    --color-cream-card: #FFFFFF;
+    --color-stone: #E5E1D8;
+    --color-charcoal: #1E2322;
+    --color-text-muted: #5C6461;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-cream);
+    color: var(--color-charcoal);
+    font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+}
+
+/* =========================================================================
+   Fly Airplane Send Button (Customized for Lima Innovations)
+   ========================================================================= */
+.btn-fly {
+  font-family: inherit;
+  font-size: 16px;
+  background: var(--color-warm-wood);
+  background-image: linear-gradient(135deg, #B86732 0%, #A45A2A 50%, #8B4A20 100%);
+  color: white;
+  padding: 0.85em 1.8em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+}
+
+.btn-fly .svg-wrapper-1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.btn-fly .svg-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-fly svg {
+  display: block;
+  transform-origin: center center;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #ffffff;
+}
+
+.btn-fly span {
+  display: block;
+  margin-left: 0.55em;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+}
+
+.btn-fly:hover {
+  background-image: linear-gradient(135deg, #C26F38 0%, #B86732 50%, #8B4A20 100%);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-fly:hover .svg-wrapper {
+  animation: fly-1 0.6s ease-in-out infinite alternate;
+}
+
+/* Centraliza perfeitamente o avião ao sumir com o texto */
+.btn-fly:hover .svg-wrapper-1 {
+  transform: translateX(48px);
+}
+
+.btn-fly:hover svg {
+  transform: rotate(45deg) scale(1.15);
+}
+
+.btn-fly:hover span {
+  transform: translateX(3em);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.btn-fly:active {
+  transform: scale(0.96);
+}
+
+@keyframes fly-1 {
+  from {
+    transform: translateY(0.12em);
+  }
+  to {
+    transform: translateY(-0.12em);
+  }
+}
