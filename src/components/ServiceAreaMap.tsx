@@ -120,52 +120,38 @@ export function ServiceAreaMap() {
       try {
         const maplibregl = await import("maplibre-gl");
 
-        // Fetch and customize the OpenFreeMap vector style into brand architectural palette
-        // Brightens roads and terrain so Northern Colorado is clear, legible, and vibrant
-        let mapStyle: any = "https://tiles.openfreemap.org/styles/dark";
-        try {
-          const res = await fetch("https://tiles.openfreemap.org/styles/dark");
-          if (res.ok) {
-            const styleJson = await res.json();
-            styleJson.layers.forEach((l: any) => {
-              if (!l.paint) return;
-              if (l.type === "background") {
-                l.paint["background-color"] = "#14221D"; // Elegant deep forest-slate
-              }
-              if (l.id.includes("water")) {
-                if (l.paint["fill-color"]) l.paint["fill-color"] = "#0b1512";
-                if (l.paint["line-color"]) l.paint["line-color"] = "#0b1512";
-              }
-              if (l.id.includes("park") || l.id.includes("wood")) {
-                if (l.paint["fill-color"]) l.paint["fill-color"] = "#192b24";
-              }
-              // Colorado I-25 corridor & Interstate Highways: warm terracotta
-              if (l.id.includes("motorway_inner")) {
-                l.paint["line-color"] = "#C47A4A";
-              }
-              if (l.id.includes("motorway_casing")) {
-                l.paint["line-color"] = "#753916";
-              }
-              // Major arteries (US-34, US-287, etc.): clear high-contrast lines
-              if (l.id.includes("highway_major_inner")) {
-                l.paint["line-color"] = "#507567";
-              }
-              if (l.id.includes("highway_major_casing")) {
-                l.paint["line-color"] = "#23352f";
-              }
-              if (l.id.includes("highway_minor") || l.id.includes("highway_major_subtle")) {
-                l.paint["line-color"] = "#364e44";
-              }
-            });
-            mapStyle = styleJson;
-          }
-        } catch (e) {
-          console.warn("Using remote vector URL fallback:", e);
-        }
+        // High-contrast, crystal-clear OpenStreetMap basemap
+        // Ultra-fast global CDN, zero API keys, fully visible road networks and towns
+        const osmStyle: any = {
+          version: 8,
+          sources: {
+            "osm-tiles": {
+              type: "raster",
+              tiles: [
+                "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                "https://b.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
+              ],
+              tileSize: 256,
+              attribution:
+                '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors',
+            },
+          },
+          layers: [
+            {
+              id: "osm-layer",
+              type: "raster",
+              source: "osm-tiles",
+              paint: {
+                "raster-opacity": 0.95,
+              },
+            },
+          ],
+        };
 
         const map = new maplibregl.Map({
           container: mapContainerRef.current,
-          style: mapStyle,
+          style: osmStyle,
           center: INITIAL_CENTER,
           zoom: INITIAL_ZOOM,
           minZoom: 8,
@@ -175,12 +161,10 @@ export function ServiceAreaMap() {
           cooperativeGestures: true, // Use Cmd/Ctrl + scroll to zoom
         });
 
-        // Add minimal compact attribution for OpenStreetMap & OpenFreeMap
+        // Add minimal compact attribution
         map.addControl(
           new maplibregl.AttributionControl({
             compact: true,
-            customAttribution:
-              '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> &copy; <a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a>',
           }),
           "bottom-right"
         );
@@ -188,7 +172,7 @@ export function ServiceAreaMap() {
         // Safety fallback timer so loading skeleton never hangs
         const loadTimer = setTimeout(() => {
           if (isMounted) setIsMapLoaded(true);
-        }, 1200);
+        }, 800);
 
         const setupLayersAndReveal = () => {
           clearTimeout(loadTimer);
@@ -227,8 +211,8 @@ export function ServiceAreaMap() {
               source: "hub-connections",
               paint: {
                 "line-color": "#A45A2A",
-                "line-width": 3,
-                "line-opacity": 0.25,
+                "line-width": 4,
+                "line-opacity": 0.35,
                 "line-blur": 2,
               },
             });
@@ -239,9 +223,9 @@ export function ServiceAreaMap() {
               type: "line",
               source: "hub-connections",
               paint: {
-                "line-color": "#C47A4A",
-                "line-width": 1.5,
-                "line-opacity": 0.6,
+                "line-color": "#E08A56",
+                "line-width": 2,
+                "line-opacity": 0.9,
                 "line-dasharray": [2, 3],
               },
             });
@@ -383,10 +367,10 @@ export function ServiceAreaMap() {
       {/* 1. MAP CANVAS CONTAINER */}
       <div className="relative w-full h-[500px] sm:h-[540px] lg:h-[580px] rounded-2xl overflow-hidden bg-[#14221D] border border-[#2D443D] shadow-2xl">
         
-        {/* Map Canvas - Clean vector rendering with clear contrast */}
+        {/* Map Canvas - High-contrast architectural OpenStreetMap basemap */}
         <div 
           ref={mapContainerRef} 
-          className="absolute inset-0 w-full h-full"
+          className="absolute inset-0 w-full h-full [&_.maplibregl-canvas]:filter [&_.maplibregl-canvas]:invert-[94%] [&_.maplibregl-canvas]:hue-rotate-[180deg] [&_.maplibregl-canvas]:brightness-[88%] [&_.maplibregl-canvas]:contrast-[122%] [&_.maplibregl-canvas]:saturate-[70%]"
         />
 
         {/* Loading state skeleton */}
