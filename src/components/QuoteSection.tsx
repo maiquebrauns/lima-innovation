@@ -54,13 +54,7 @@ export function QuoteSection() {
           className="relative block w-full h-12 sm:h-20 lg:h-28 text-[#121B18]"
           preserveAspectRatio="none"
         >
-          {/* Layer 1: Ambient architectural depth wave */}
-          <path
-            d="M0,65 C200,25 380,25 560,65 C740,105 920,105 1100,65 C1280,30 1380,45 1440,65 L1440,120 L0,120 Z"
-            fill="#1F302B"
-            fillOpacity="0.45"
-          />
-          {/* Layer 2: Main solid wave flowing up and down */}
+          {/* Crisp solid architectural wave flowing up and down */}
           <path
             d="M0,45 C180,10 360,10 540,50 C720,95 900,95 1080,50 C1260,15 1380,30 1440,45 L1440,120 L0,120 Z"
             fill="currentColor"
