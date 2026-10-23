@@ -25,7 +25,7 @@ export default function HomePage() {
           <div className="mb-12 sm:mb-16 text-center">
             <div className="pb-8 border-b border-neutral-200/80 max-w-4xl mx-auto">
               <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#A45A2A] font-semibold block mb-3">
-                Service Area • Loveland &amp; Northern Colorado
+                Service Area
               </span>
               <h2 className="text-3xl sm:text-5xl font-normal text-[#1F302B] tracking-tight">
                 Proudly Serving Northern Colorado.
