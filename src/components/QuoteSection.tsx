@@ -58,10 +58,10 @@ export function QuoteSection() {
               Left Side — Architectural Visual Experience
              ========================================================= */}
           <div className="lg:col-span-5 relative min-h-[520px] lg:min-h-full flex flex-col justify-between p-8 sm:p-12 lg:p-14 overflow-hidden">
-            {/* Background Image: High-end Colorado modern home with large windows, wood details & entryway */}
+            {/* Background Image: High-end Colorado home featuring custom windows, siding, and architectural details */}
             <Image
-              src="/assets/images/project-1.jpg"
-              alt="Modern architectural home in Colorado featuring custom windows, wood slats, and entryway door"
+              src="/assets/images/contact-colorado-home.jpg"
+              alt="Colorado mountain residence featuring custom windows, exterior siding, and deck"
               fill
               sizes="(max-width: 1024px) 100vw, 42vw"
               className="object-cover object-center scale-105 transition-transform duration-1000 ease-out"
