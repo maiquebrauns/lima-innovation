@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, CheckCircle2, ShieldCheck } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { ServiceItem, LIMA_CONFIG } from "@/data/content";
 
 interface SpatialGlassCard {
@@ -28,6 +28,7 @@ export function ServiceDetailExperience({ service }: ServiceDetailExperienceProp
 
   const [isReady, setIsReady] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [activeGalleryIdx, setActiveGalleryIdx] = useState<number>(0);
 
   const hasVideo = Boolean(service.videoUrl);
 
@@ -35,6 +36,7 @@ export function ServiceDetailExperience({ service }: ServiceDetailExperienceProp
   useEffect(() => {
     setIsReady(false);
     setProgress(0);
+    setActiveGalleryIdx(0);
     if (typeof window !== "undefined") {
       window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     }
@@ -455,74 +457,51 @@ export function ServiceDetailExperience({ service }: ServiceDetailExperienceProp
         </section>
       )}
 
-      {/* 3. SEGUNDA PARTE DO SITE: DETALHES, CRAFTSMANSHIP & GALERIA DE FOTOS (FORA DO SCROLLING PRINCIPAL) */}
-      <section className="py-20 sm:py-28 bg-[#14211D] border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl space-y-6">
-            <div className="inline-flex items-center gap-2 text-[#A45A2A] text-xs uppercase font-extrabold tracking-widest">
-              <span className="w-2 h-2 rounded-full bg-[#A45A2A]" />
-              <span>{service.categoryTag}</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Quality Craftsmanship Built to Endure
-            </h2>
-            <p className="text-white/85 text-base sm:text-lg leading-relaxed font-normal">
-              {service.fullDesc}
-            </p>
-
-            {/* Highlights Grid */}
-            <div className="pt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {service.highlights.map((highlight, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-start gap-3 bg-white/5 border border-white/10 p-4 rounded-2xl backdrop-blur-xs"
-                >
-                  <CheckCircle2 className="w-5 h-5 text-[#A45A2A] shrink-0 mt-0.5" />
-                  <span className="text-sm text-white/90 font-medium">{highlight}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="pt-4 flex items-center gap-3 text-xs font-semibold text-white/60">
-              <ShieldCheck className="w-4 h-4 text-[#A45A2A]" />
-              <span>Licensed, Insured &amp; Engineered to Local Colorado Building Codes</span>
-            </div>
+      {/* 3. OUR LATEST CREATIONS ACCORDION GALLERY */}
+      <section className="w-full flex flex-col items-center justify-start py-16 sm:py-24 bg-[#14211D] border-t border-white/10 overflow-hidden">
+        <div className="max-w-3xl text-center px-4">
+          <div className="inline-flex items-center gap-2 text-[#A45A2A] text-xs uppercase font-extrabold tracking-widest mb-3">
+            <span className="w-2 h-2 rounded-full bg-[#A45A2A]" />
+            <span>{service.title} Portfolio</span>
           </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
+            Our Latest Creations
+          </h2>
+          <p className="text-sm sm:text-base text-white/70 mt-3 max-w-xl mx-auto leading-relaxed">
+            A visual collection of our most recent works – each piece crafted with intention, emotion, and style.
+          </p>
+        </div>
 
-          {/* 4. PHOTO GALLERY: "mostrando um pouco do que é feito" */}
-          {service.gallery && service.gallery.length > 0 && (
-            <div className="mt-20 pt-16 border-t border-white/10">
-              <div className="mb-10">
-                <span className="text-xs uppercase font-extrabold tracking-widest text-[#A45A2A] block mb-2">
-                  Recent Installations
-                </span>
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-white">
-                  Craftsmanship in Detail
-                </h3>
-                <p className="text-white/70 text-sm mt-1">
-                  A preview of completed {service.title.toLowerCase()} projects across Northern Colorado.
-                </p>
+        {/* Horizontal Expandable Gallery */}
+        <div className="flex items-center gap-2 sm:gap-3 h-[420px] sm:h-[480px] w-full max-w-6xl mt-10 px-4 sm:px-6">
+          {(service.gallery && service.gallery.length > 0
+            ? service.gallery
+            : [service.image]
+          ).map((src, idx) => {
+            const isActive = activeGalleryIdx === idx;
+            return (
+              <div
+                key={idx}
+                onMouseEnter={() => setActiveGalleryIdx(idx)}
+                onClick={() => setActiveGalleryIdx(idx)}
+                className={`relative group transition-all duration-500 ease-out h-[400px] sm:h-[480px] rounded-2xl overflow-hidden cursor-pointer border border-white/10 shadow-2xl ${
+                  isActive
+                    ? "flex-[5] sm:flex-[6] min-w-[120px] sm:min-w-[280px] opacity-100 ring-1 ring-white/20"
+                    : "flex-1 min-w-[42px] sm:min-w-[64px] lg:min-w-[76px] opacity-75 hover:opacity-100"
+                }`}
+              >
+                <Image
+                  src={src}
+                  alt={`${service.title} project showcase ${idx + 1}`}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                  priority={idx === 0}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
               </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {service.gallery.map((imgUrl, i) => (
-                  <div
-                    key={i}
-                    className="relative aspect-4/3 rounded-2xl overflow-hidden border border-white/15 shadow-xl group bg-black/40"
-                  >
-                    <Image
-                      src={imgUrl}
-                      alt={`${service.title} installation perspective ${i + 1}`}
-                      fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                      className="object-cover group-hover:scale-106 transition-transform duration-500"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
+            );
+          })}
         </div>
       </section>
     </div>

@@ -125,10 +125,12 @@ export const LIMA_CONFIG = {
         "Acoustic dampening and UV interior protection"
       ],
       gallery: [
-        "/assets/images/service-windows.jpg",
-        "/assets/images/project-1.jpg",
-        "/assets/images/project-4.jpg",
-        "/assets/images/after-windows.jpg"
+        "/assets/images/custom-window-replacement-showcase.jpg",
+        "/assets/images/gallery-windows-frame-2.jpg",
+        "/assets/images/gallery-windows-frame-3.jpg",
+        "/assets/images/windows-hero.jpg",
+        "/assets/images/gallery-windows-frame-1.jpg",
+        "/assets/images/project-4.jpg"
       ]
     },
     {
@@ -184,9 +186,12 @@ export const LIMA_CONFIG = {
         "Smooth-glide patio sliders and multi-panel systems"
       ],
       gallery: [
-        "/assets/images/service-doors.jpg",
-        "/assets/images/project-5.jpg",
-        "/assets/images/after-doors.jpg"
+        "/assets/images/architectural-entryway-door-showcase.jpg",
+        "/assets/images/gallery-doors-frame-2.jpg",
+        "/assets/images/gallery-doors-frame-3.jpg",
+        "/assets/images/gallery-doors-frame-1.jpg",
+        "/assets/images/project-1.jpg",
+        "/assets/images/contact-colorado-home.jpg"
       ]
     },
     {
@@ -242,10 +247,12 @@ export const LIMA_CONFIG = {
         "Precision mitered corners and architectural trim"
       ],
       gallery: [
+        "/assets/images/complete-siding-trim-showcase.jpg",
+        "/assets/images/contact-colorado-home.jpg",
+        "/assets/images/gallery-siding-frame-2.jpg",
         "/assets/images/siding-nova.jpg",
-        "/assets/images/project-2.jpg",
-        "/assets/images/project-3.jpg",
-        "/assets/images/after-siding.jpg"
+        "/assets/images/gallery-siding-frame-3.jpg",
+        "/assets/images/gallery-siding-frame-1.jpg"
       ]
     },
     {
@@ -301,9 +308,12 @@ export const LIMA_CONFIG = {
         "Built-in perimeter and stair step low-voltage LED lighting"
       ],
       gallery: [
-        "/assets/images/service-decks.jpg",
-        "/assets/images/project-6.jpg",
-        "/assets/images/after-decks.jpg"
+        "/assets/images/colorado-mountain-view-deck-showcase.jpg",
+        "/assets/images/colorado-deck-showcase.jpg",
+        "/assets/images/gallery-decks-frame-2.jpg",
+        "/assets/images/gallery-decks-frame-3.jpg",
+        "/assets/images/gallery-decks-frame-1.jpg",
+        "/assets/images/gallery-windows-frame-2.jpg"
       ]
     }
   ] as ServiceItem[],
