@@ -120,11 +120,52 @@ export function ServiceAreaMap() {
       try {
         const maplibregl = await import("maplibre-gl");
 
-        // OpenFreeMap Dark Vector Style via MapLibre GL JS
-        // Free vector tiles hosted on Cloudflare Edge with OSM data
+        // Fetch and customize the OpenFreeMap vector style into brand architectural palette
+        // Brightens roads and terrain so Northern Colorado is clear, legible, and vibrant
+        let mapStyle: any = "https://tiles.openfreemap.org/styles/dark";
+        try {
+          const res = await fetch("https://tiles.openfreemap.org/styles/dark");
+          if (res.ok) {
+            const styleJson = await res.json();
+            styleJson.layers.forEach((l: any) => {
+              if (!l.paint) return;
+              if (l.type === "background") {
+                l.paint["background-color"] = "#14221D"; // Elegant deep forest-slate
+              }
+              if (l.id.includes("water")) {
+                if (l.paint["fill-color"]) l.paint["fill-color"] = "#0b1512";
+                if (l.paint["line-color"]) l.paint["line-color"] = "#0b1512";
+              }
+              if (l.id.includes("park") || l.id.includes("wood")) {
+                if (l.paint["fill-color"]) l.paint["fill-color"] = "#192b24";
+              }
+              // Colorado I-25 corridor & Interstate Highways: warm terracotta
+              if (l.id.includes("motorway_inner")) {
+                l.paint["line-color"] = "#C47A4A";
+              }
+              if (l.id.includes("motorway_casing")) {
+                l.paint["line-color"] = "#753916";
+              }
+              // Major arteries (US-34, US-287, etc.): clear high-contrast lines
+              if (l.id.includes("highway_major_inner")) {
+                l.paint["line-color"] = "#507567";
+              }
+              if (l.id.includes("highway_major_casing")) {
+                l.paint["line-color"] = "#23352f";
+              }
+              if (l.id.includes("highway_minor") || l.id.includes("highway_major_subtle")) {
+                l.paint["line-color"] = "#364e44";
+              }
+            });
+            mapStyle = styleJson;
+          }
+        } catch (e) {
+          console.warn("Using remote vector URL fallback:", e);
+        }
+
         const map = new maplibregl.Map({
           container: mapContainerRef.current,
-          style: "https://tiles.openfreemap.org/styles/dark",
+          style: mapStyle,
           center: INITIAL_CENTER,
           zoom: INITIAL_ZOOM,
           minZoom: 8,
@@ -340,20 +381,17 @@ export function ServiceAreaMap() {
   return (
     <div className="w-full flex flex-col gap-4">
       {/* 1. MAP CANVAS CONTAINER */}
-      <div className="relative w-full h-[500px] sm:h-[540px] lg:h-[580px] rounded-2xl overflow-hidden bg-[#162420] border border-[#2D443D] shadow-2xl">
+      <div className="relative w-full h-[500px] sm:h-[540px] lg:h-[580px] rounded-2xl overflow-hidden bg-[#14221D] border border-[#2D443D] shadow-2xl">
         
-        {/* Architectural atmospheric green tint overlay */}
+        {/* Map Canvas - Clean vector rendering with clear contrast */}
         <div 
           ref={mapContainerRef} 
-          className="absolute inset-0 w-full h-full [&_.maplibregl-canvas]:filter [&_.maplibregl-canvas]:contrast-105 [&_.maplibregl-canvas]:hue-rotate-[55deg] [&_.maplibregl-canvas]:brightness-95"
+          className="absolute inset-0 w-full h-full"
         />
-
-        {/* Ambient forest vignette around map edges */}
-        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_40%,rgba(19,32,27,0.7)_100%)] z-10" />
 
         {/* Loading state skeleton */}
         {!isMapLoaded && !mapError && (
-          <div className="absolute inset-0 bg-[#162420] flex flex-col items-center justify-center gap-3 z-30 text-[#F8F6F0]">
+          <div className="absolute inset-0 bg-[#14221D] flex flex-col items-center justify-center gap-3 z-30 text-[#F8F6F0]">
             <div className="w-10 h-10 rounded-full border-2 border-[#A45A2A] border-t-transparent animate-spin" />
             <span className="text-xs font-mono uppercase tracking-widest text-[#F8F6F0]/80">
               Loading Northern Colorado Cartography...
@@ -363,7 +401,7 @@ export function ServiceAreaMap() {
 
         {/* Fallback view if WebGL is unavailable */}
         {mapError && (
-          <div className="absolute inset-0 bg-[#162420] p-6 flex flex-col justify-between z-30 text-white">
+          <div className="absolute inset-0 bg-[#14221D] p-6 flex flex-col justify-between z-30 text-white">
             <div className="space-y-2">
               <span className="text-xs font-mono uppercase tracking-widest text-[#A45A2A]">
                 Regional Coverage
@@ -390,12 +428,12 @@ export function ServiceAreaMap() {
           </div>
         )}
 
-        {/* 2. MINIMALIST LIQUID-GLASS LOCATION OVERLAY (Sem excesso de texto) */}
+        {/* 2. MINIMALIST LIQUID-GLASS LOCATION OVERLAY */}
         <div className="absolute top-5 left-5 z-20 pointer-events-auto">
-          <div className="bg-[#14201C]/65 backdrop-blur-xl border border-white/20 rounded-2xl p-4 sm:p-5 text-white shadow-2xl transition-all duration-300 min-w-[210px] sm:min-w-[240px] flex flex-col gap-3.5">
+          <div className="bg-[#14201C]/50 backdrop-blur-2xl border border-white/20 rounded-2xl p-4 sm:p-5 text-white shadow-[0_12px_40px_rgba(0,0,0,0.45),inset_0_1px_1px_rgba(255,255,255,0.25)] transition-all duration-300 min-w-[210px] sm:min-w-[250px] flex flex-col gap-3.5">
             <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#A45A2A] animate-pulse shrink-0" />
+              <div className="flex items-center gap-2.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#E08A56] animate-pulse shrink-0 shadow-[0_0_8px_#E08A56]" />
                 <h3 className="text-xl sm:text-2xl font-light tracking-tight text-white leading-none">
                   {selectedLocation.city}
                   <span className="text-xs font-mono font-normal text-white/50 ml-1.5 uppercase">
@@ -404,19 +442,21 @@ export function ServiceAreaMap() {
                 </h3>
               </div>
               {selectedLocation.isPrimary && (
-                <span className="text-[10px] font-mono uppercase tracking-wider font-bold bg-[#A45A2A] text-white px-2 py-0.5 rounded-full shadow-xs">
+                <span className="text-[10px] font-mono uppercase tracking-wider font-bold bg-[#A45A2A]/90 text-white px-2 py-0.5 rounded-full border border-white/15 shadow-sm">
                   HQ
                 </span>
               )}
             </div>
 
-            {/* Minimalist Request Button */}
+            {/* Premium Frosted Liquid-Glass Request Button */}
             <a
               href="#contact"
-              className="inline-flex items-center justify-center w-full gap-2 py-2.5 px-4 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#A45A2A] hover:bg-[#8B4A20] text-white transition-all shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+              className="group relative overflow-hidden inline-flex items-center justify-center w-full gap-2 py-2.5 px-4 rounded-xl text-xs font-bold uppercase tracking-wider text-white bg-white/10 hover:bg-white/20 active:bg-white/15 backdrop-blur-md border border-white/25 hover:border-white/45 shadow-[0_4px_20px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.35)] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
             >
+              {/* Subtle top specular glass light */}
+              <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/50 to-transparent pointer-events-none" />
               <span>Request Service</span>
-              <Navigation className="w-3.5 h-3.5" />
+              <Navigation className="w-3.5 h-3.5 text-[#E08A56] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </a>
           </div>
         </div>
