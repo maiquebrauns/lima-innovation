@@ -19,34 +19,22 @@ export function HeroSection() {
     if (!video || !container) return;
 
     let duration = video.duration || 10;
-    let isSeeking = false;
-    let pendingTime: number | null = null;
     let targetTime = 0;
     let targetProgress = 0;
     let ticking = false;
     let isReadyFired = false;
+    let lastTime = -1;
 
-    // 1. Core video seeker
+    // 1. Core video seeker (lock-free, rAF throttled)
     const setVideoTime = (time: number) => {
       const safeTime = Math.max(0.001, Math.min(duration - 0.05, time));
-      if (isSeeking) {
-        pendingTime = safeTime;
-      } else {
-        isSeeking = true;
+      if (Math.abs(safeTime - lastTime) > 0.01) {
+        lastTime = safeTime;
         try {
-          video.currentTime = safeTime;
-        } catch {
-          isSeeking = false;
-        }
-      }
-    };
-
-    const handleSeeked = () => {
-      isSeeking = false;
-      if (pendingTime !== null) {
-        const nextTime = pendingTime;
-        pendingTime = null;
-        setVideoTime(nextTime);
+          if (video.readyState >= 1) {
+            video.currentTime = safeTime;
+          }
+        } catch {}
       }
     };
 
@@ -86,7 +74,6 @@ export function HeroSection() {
         duration = 10;
       }
       setIsReady(true);
-      setVideoTime(0.001);
       onScroll();
     };
 
@@ -98,8 +85,9 @@ export function HeroSection() {
     };
 
     // 5. Register listeners
-    video.addEventListener("seeked", handleSeeked);
     video.addEventListener("loadedmetadata", handleLoadedMetadata);
+    video.addEventListener("loadeddata", markReady);
+    video.addEventListener("canplay", markReady);
     video.addEventListener("canplaythrough", markReady);
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
@@ -115,8 +103,9 @@ export function HeroSection() {
 
     return () => {
       clearTimeout(fallbackTimer);
-      video.removeEventListener("seeked", handleSeeked);
       video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      video.removeEventListener("loadeddata", markReady);
+      video.removeEventListener("canplay", markReady);
       video.removeEventListener("canplaythrough", markReady);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
@@ -138,17 +127,7 @@ export function HeroSection() {
         
         {/* Full-bleed Background Video & Poster */}
         <div className="absolute inset-0 z-0 pointer-events-none bg-[#0a0f0d]">
-          {/* Permanent high-res poster layer (ensures screen is NEVER black on mobile) */}
-          <Image
-            src="/assets/videos/hero-scroll-poster.jpg"
-            alt="Lima Innovations Exterior Construction & Mountain Architecture"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-center"
-          />
-
-          {/* Keyframe Video bound to scroll */}
+          {/* Keyframe Video bound to scroll (100% solid, instant intra-frame decode) */}
           <video
             ref={videoRef}
             src="/assets/videos/hero-scroll-keyint.mp4"
@@ -157,10 +136,24 @@ export function HeroSection() {
             playsInline
             preload="auto"
             aria-hidden="true"
-            className={`w-full h-full object-cover object-center transition-opacity duration-700 bg-transparent ${
-              isReady ? "opacity-100" : "opacity-0"
-            }`}
+            className="w-full h-full object-cover object-center bg-[#0a0f0d]"
           />
+
+          {/* Instant loading poster shield (fades away cleanly once video is ready, zero ghosting) */}
+          <div
+            className={`absolute inset-0 transition-opacity duration-300 pointer-events-none ${
+              isReady ? "opacity-0" : "opacity-100"
+            }`}
+          >
+            <Image
+              src="/assets/videos/hero-scroll-poster.jpg"
+              alt="Lima Innovations Exterior Construction & Mountain Architecture"
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-center"
+            />
+          </div>
 
           {/* Vignette gradients for text legibility and clean borders */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f0d] via-black/35 to-black/60" />

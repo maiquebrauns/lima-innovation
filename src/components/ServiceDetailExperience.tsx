@@ -119,34 +119,22 @@ export function ServiceDetailExperience({ service }: ServiceDetailExperienceProp
     if (!video || !container) return;
 
     let duration = video.duration || 10;
-    let isSeeking = false;
-    let pendingTime: number | null = null;
     let targetTime = 0;
     let targetProgress = 0;
     let ticking = false;
     let isReadyFired = false;
+    let lastTime = -1;
 
-    // 1. Core video seeker
+    // 1. Core video seeker (lock-free, rAF throttled)
     const setVideoTime = (time: number) => {
       const safeTime = Math.max(0.001, Math.min(duration - 0.05, time));
-      if (isSeeking) {
-        pendingTime = safeTime;
-      } else {
-        isSeeking = true;
+      if (Math.abs(safeTime - lastTime) > 0.01) {
+        lastTime = safeTime;
         try {
-          video.currentTime = safeTime;
-        } catch {
-          isSeeking = false;
-        }
-      }
-    };
-
-    const handleSeeked = () => {
-      isSeeking = false;
-      if (pendingTime !== null) {
-        const nextTime = pendingTime;
-        pendingTime = null;
-        setVideoTime(nextTime);
+          if (video.readyState >= 1) {
+            video.currentTime = safeTime;
+          }
+        } catch {}
       }
     };
 
@@ -186,7 +174,6 @@ export function ServiceDetailExperience({ service }: ServiceDetailExperienceProp
         duration = 10;
       }
       setIsReady(true);
-      setVideoTime(0.001);
       onScroll();
     };
 
@@ -198,8 +185,9 @@ export function ServiceDetailExperience({ service }: ServiceDetailExperienceProp
     };
 
     // 5. Register listeners
-    video.addEventListener("seeked", handleSeeked);
     video.addEventListener("loadedmetadata", handleLoadedMetadata);
+    video.addEventListener("loadeddata", markReady);
+    video.addEventListener("canplay", markReady);
     video.addEventListener("canplaythrough", markReady);
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
@@ -215,8 +203,9 @@ export function ServiceDetailExperience({ service }: ServiceDetailExperienceProp
 
     return () => {
       clearTimeout(fallbackTimer);
-      video.removeEventListener("seeked", handleSeeked);
       video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      video.removeEventListener("loadeddata", markReady);
+      video.removeEventListener("canplay", markReady);
       video.removeEventListener("canplaythrough", markReady);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
