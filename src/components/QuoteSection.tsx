@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Send, CheckCircle2, ShieldCheck, Clock, Sparkles } from "lucide-react";
+import Image from "next/image";
+import { Send, CheckCircle2, ShieldCheck, Phone, MapPin, ArrowUpRight, Sparkles } from "lucide-react";
 import { LIMA_CONFIG } from "@/data/content";
 
 export function QuoteSection() {
@@ -33,212 +34,298 @@ export function QuoteSection() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate interactive smooth form handling
     setIsSubmitted(true);
   };
 
   return (
-    <section id="contact" className="py-24 bg-[#1F302B] text-white relative overflow-hidden scroll-mt-16">
+    <section
+      id="contact"
+      className="py-20 sm:py-28 lg:py-32 bg-[#121B18] text-white relative overflow-hidden scroll-mt-16"
+    >
       {/* Anchor alias so #quote also scrolls here */}
       <div id="quote" className="absolute -top-16 left-0 pointer-events-none" />
-      
-      {/* Decorative mountain background glow */}
-      <div className="absolute top-0 right-0 -mr-40 -mt-40 w-96 h-96 rounded-full bg-[#A45A2A]/20 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 -ml-40 -mb-40 w-96 h-96 rounded-full bg-[#2D443D]/60 blur-3xl pointer-events-none" />
+
+      {/* Decorative architectural ambient glows */}
+      <div className="absolute -top-40 -left-40 w-[550px] h-[550px] rounded-full bg-[#1F302B]/60 blur-[140px] pointer-events-none" />
+      <div className="absolute -bottom-40 -right-40 w-[550px] h-[550px] rounded-full bg-[#A45A2A]/20 blur-[150px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Info Side */}
-          <div className="lg:col-span-5 space-y-6">
-            <span className="text-xs uppercase font-extrabold tracking-widest text-[#A45A2A] bg-[#A45A2A]/20 px-3 py-1 rounded-full border border-[#A45A2A]/30">
-              Free Consultation &amp; Estimate
-            </span>
-            <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
-              Ready to Upgrade Your Home?
-            </h2>
-            <p className="text-white/80 text-base sm:text-lg leading-relaxed">
-              Tell us about your upcoming project. We provide straightforward, transparent consultations and detailed, no-obligation quotes for homeowners across Northern Colorado.
-            </p>
+        
+        {/* Main Architectural Split Container */}
+        <div className="rounded-3xl sm:rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl bg-[#17231F] grid grid-cols-1 lg:grid-cols-12 items-stretch">
+          
+          {/* =========================================================
+              Left Side — Architectural Visual Experience
+             ========================================================= */}
+          <div className="lg:col-span-5 relative min-h-[520px] lg:min-h-full flex flex-col justify-between p-8 sm:p-12 lg:p-14 overflow-hidden">
+            {/* Background Image: High-end Colorado modern home with large windows, wood details & entryway */}
+            <Image
+              src="/assets/images/project-1.jpg"
+              alt="Modern architectural home in Colorado featuring custom windows, wood slats, and entryway door"
+              fill
+              sizes="(max-width: 1024px) 100vw, 42vw"
+              className="object-cover object-center scale-105 transition-transform duration-1000 ease-out"
+              priority
+            />
 
-            <div className="space-y-4 pt-4 border-t border-white/10">
-              <div className="flex items-start gap-3">
-                <ShieldCheck className="w-5 h-5 text-[#A45A2A] shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-bold text-sm">Clear, Honest Estimates</h4>
-                  <p className="text-white/60 text-xs">No pushy sales tactics or hidden fees. Just expert advice.</p>
-                </div>
+            {/* Architectural Dark Green Gradient Overlay for High Readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#111A17]/95 via-[#162420]/80 to-[#121B18]/55" />
+            
+            {/* Subtle top ambient light line */}
+            <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+
+            {/* Content Layer (Top: Headlines & Story) */}
+            <div className="relative z-10 space-y-5">
+              <span className="inline-block text-[11px] font-mono uppercase tracking-[0.25em] text-[#C98A5B] font-semibold">
+                LET&apos;S TALK ABOUT YOUR PROJECT
+              </span>
+              
+              <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-normal text-white tracking-tight leading-[1.12]">
+                Your Home Deserves Better.
+              </h2>
+              
+              <p className="text-white/80 text-sm sm:text-base font-light leading-relaxed max-w-md pt-1">
+                From beautiful new windows to complete exterior transformations, we help homeowners bring their vision to life with quality craftsmanship and honest guidance.
+              </p>
+
+              {/* Architectural Value Tags */}
+              <div className="flex flex-wrap gap-2 pt-4">
+                <span className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-white/70 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
+                  <Sparkles className="w-3 h-3 text-[#C98A5B]" />
+                  Northern Colorado
+                </span>
+                <span className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-white/70 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
+                  <ShieldCheck className="w-3 h-3 text-[#C98A5B]" />
+                  Licensed &amp; Insured
+                </span>
               </div>
-              <div className="flex items-start gap-3">
-                <Clock className="w-5 h-5 text-[#A45A2A] shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-bold text-sm">Prompt Response</h4>
-                  <p className="text-white/60 text-xs">We typically get back to project inquiries within 24 business hours.</p>
-                </div>
+            </div>
+
+            {/* Content Layer (Bottom: Refined Contact Detail & Direct Call) */}
+            <div className="relative z-10 pt-10 mt-8 border-t border-white/15 space-y-4">
+              <div className="flex items-center justify-between text-xs text-white/60 font-mono uppercase tracking-wider">
+                <span>Direct Contact</span>
+                <span>Primary Hub</span>
               </div>
-              <div className="flex items-start gap-3">
-                <Sparkles className="w-5 h-5 text-[#A45A2A] shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-bold text-sm">Built for Colorado Weather</h4>
-                  <p className="text-white/60 text-xs">Engineered to endure hail, UV exposure, and seasonal freezing shifts.</p>
+
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <a
+                  href="tel:+19707751830"
+                  className="inline-flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 backdrop-blur-md transition-all duration-200 group/call"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-[#A45A2A] text-white flex items-center justify-center shrink-0 group-hover/call:scale-105 transition-transform shadow-sm">
+                    <Phone className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="block text-[10px] text-white/60 font-mono uppercase tracking-wider">Call or Text</span>
+                    <span className="text-sm font-semibold text-white tracking-wide">970 775 1830</span>
+                  </div>
+                </a>
+
+                <div className="flex items-center gap-2 text-white/80 text-xs sm:text-sm font-medium">
+                  <MapPin className="w-4 h-4 text-[#C98A5B] shrink-0" />
+                  <span>Northern Colorado</span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Form Side */}
-          <div className="lg:col-span-7">
-            <div className="bg-white rounded-3xl p-8 sm:p-10 shadow-2xl text-neutral-900 border border-neutral-100">
-              {isSubmitted ? (
-                <div className="text-center py-12 space-y-4">
-                  <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto">
-                    <CheckCircle2 className="w-10 h-10" />
-                  </div>
-                  <h3 className="text-2xl font-extrabold text-[#1F302B]">
-                    Thank You, {formData.name || "Neighbor"}!
-                  </h3>
-                  <p className="text-neutral-600 max-w-md mx-auto text-sm">
-                    We received your quote request. Our team will review your project details and contact you shortly at{" "}
-                    <strong>{formData.phone || formData.email}</strong>.
-                  </p>
+          {/* =========================================================
+              Right Side — Premium Form Card Experience
+             ========================================================= */}
+          <div className="lg:col-span-7 bg-[#FAF9F6] p-8 sm:p-12 lg:p-14 text-neutral-900 flex flex-col justify-center relative">
+            {isSubmitted ? (
+              <div className="text-center py-10 sm:py-16 space-y-5">
+                <div className="w-16 h-16 bg-[#1F302B]/10 text-[#1F302B] rounded-2xl flex items-center justify-center mx-auto border border-[#1F302B]/20">
+                  <CheckCircle2 className="w-9 h-9 text-[#1F302B]" />
+                </div>
+                
+                <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#A45A2A] font-semibold block">
+                  Inquiry Received
+                </span>
+
+                <h3 className="text-2xl sm:text-3xl font-normal text-[#1F302B] tracking-tight">
+                  Thank You, {formData.name || "Neighbor"}!
+                </h3>
+                
+                <p className="text-neutral-600 max-w-md mx-auto text-sm leading-relaxed">
+                  We received your consultation request for{" "}
+                  <strong className="text-neutral-900 capitalize">{formData.service}</strong> in{" "}
+                  <strong className="text-neutral-900">{formData.city || "Northern Colorado"}</strong>. Our team will review your project details and reach out at{" "}
+                  <strong className="text-neutral-900">{formData.phone || formData.email}</strong> within 24 business hours.
+                </p>
+
+                <div className="pt-4">
                   <button
-                    onClick={() => setIsSubmitted(false)}
-                    className="mt-6 text-sm font-bold text-[#A45A2A] hover:underline"
+                    onClick={() => {
+                      setIsSubmitted(false);
+                      setFormData({
+                        name: "",
+                        phone: "",
+                        email: "",
+                        service: "windows",
+                        city: "Loveland",
+                        message: "",
+                      });
+                    }}
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#A45A2A] hover:underline uppercase tracking-wider"
                   >
-                    Send another inquiry &rarr;
+                    <span>Submit another inquiry</span>
+                    <ArrowUpRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  <div className="border-b border-neutral-100 pb-4 mb-2">
-                    <h3 className="text-xl font-extrabold text-[#1F302B]">
-                      Request a Free Quote
-                    </h3>
-                    <p className="text-neutral-500 text-xs mt-1">
-                      Fill out the form below or call us directly at{" "}
-                      <a href={LIMA_CONFIG.company.phoneHref} className="text-[#A45A2A] font-semibold underline">
-                        {LIMA_CONFIG.company.phone}
-                      </a>
-                    </p>
-                  </div>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Form Header */}
+                <div className="border-b border-neutral-200/70 pb-5 mb-2">
+                  <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#A45A2A] font-semibold block mb-1.5">
+                    Request a Free Quote
+                  </span>
+                  <h3 className="text-2xl sm:text-3xl font-normal text-[#1F302B] tracking-tight">
+                    Start Your Transformation
+                  </h3>
+                  <p className="text-neutral-500 text-xs sm:text-sm mt-1.5 leading-relaxed">
+                    Fill out the form below or reach us directly at{" "}
+                    <a
+                      href="tel:+19707751830"
+                      className="text-[#A45A2A] font-semibold hover:underline"
+                    >
+                      970 775 1830
+                    </a>
+                    . No high-pressure sales tactics — just clear, honest exterior guidance.
+                  </p>
+                </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-1.5">
-                        Full Name *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="John Doe"
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#A45A2A]/40 focus:border-[#A45A2A] text-sm text-neutral-800"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-1.5">
-                        Phone Number *
-                      </label>
-                      <input
-                        type="tel"
-                        required
-                        placeholder="(970) 555-0123"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#A45A2A]/40 focus:border-[#A45A2A] text-sm text-neutral-800"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-1.5">
-                        Email Address *
-                      </label>
-                      <input
-                        type="email"
-                        required
-                        placeholder="john@example.com"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#A45A2A]/40 focus:border-[#A45A2A] text-sm text-neutral-800"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-1.5">
-                        Service Needed *
-                      </label>
-                      <select
-                        value={formData.service}
-                        onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#A45A2A]/40 focus:border-[#A45A2A] text-sm text-neutral-800 bg-white"
-                      >
-                        <option value="windows">Window Installation &amp; Replacement</option>
-                        <option value="doors">Door Installation &amp; Upgrades</option>
-                        <option value="siding">Exterior Siding &amp; Trim</option>
-                        <option value="decks">Custom Deck Construction</option>
-                        <option value="multiple">Multiple / Comprehensive Exterior</option>
-                      </select>
-                    </div>
-                  </div>
-
+                {/* Two-Column Inputs: Name & Phone */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <div className="flex items-center justify-between mb-1.5">
-                      <label 
-                        htmlFor="quote-city-input"
-                        className="block text-xs font-bold uppercase tracking-wider text-neutral-700"
-                      >
-                        Your City / Location
-                      </label>
-                      {highlightCity && (
-                        <span className="text-[10px] font-mono text-[#A45A2A] font-bold uppercase animate-pulse">
-                          Auto-selected from map &bull;
-                        </span>
-                      )}
-                    </div>
-                    <input
-                      id="quote-city-input"
-                      type="text"
-                      placeholder="e.g. Loveland, Fort Collins, Windsor..."
-                      value={formData.city}
-                      onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                      className={`w-full px-4 py-3 rounded-xl border text-sm text-neutral-800 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#A45A2A]/40 focus:border-[#A45A2A] ${
-                        highlightCity
-                          ? "border-[#A45A2A] ring-2 ring-[#A45A2A]/50 bg-[#FFF7F0]"
-                          : "border-neutral-200 bg-white"
-                      }`}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-1.5">
-                      Project Details / Notes
+                    <label className="block text-[11px] font-mono uppercase tracking-wider text-neutral-600 mb-1.5 font-medium">
+                      Full Name *
                     </label>
-                    <textarea
-                      rows={3}
-                      placeholder="Briefly describe what you'd like to get done (approximate number of windows/doors, style preferences, timeline)..."
-                      value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#A45A2A]/40 focus:border-[#A45A2A] text-sm text-neutral-800 resize-none"
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Eleanor Vance"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl border border-neutral-200/90 bg-white text-sm text-neutral-800 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#A45A2A]/30 focus:border-[#A45A2A] transition-all"
                     />
                   </div>
+                  <div>
+                    <label className="block text-[11px] font-mono uppercase tracking-wider text-neutral-600 mb-1.5 font-medium">
+                      Phone Number *
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      placeholder="(970) 555-0123"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl border border-neutral-200/90 bg-white text-sm text-neutral-800 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#A45A2A]/30 focus:border-[#A45A2A] transition-all"
+                    />
+                  </div>
+                </div>
 
+                {/* Two-Column Inputs: Email & Service */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[11px] font-mono uppercase tracking-wider text-neutral-600 mb-1.5 font-medium">
+                      Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      placeholder="eleanor@example.com"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl border border-neutral-200/90 bg-white text-sm text-neutral-800 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#A45A2A]/30 focus:border-[#A45A2A] transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-mono uppercase tracking-wider text-neutral-600 mb-1.5 font-medium">
+                      Service Needed *
+                    </label>
+                    <select
+                      value={formData.service}
+                      onChange={(e) => setFormData({ ...formData, service: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl border border-neutral-200/90 bg-white text-sm text-neutral-800 focus:outline-none focus:ring-2 focus:ring-[#A45A2A]/30 focus:border-[#A45A2A] transition-all cursor-pointer"
+                    >
+                      <option value="windows">Window Installation &amp; Replacement</option>
+                      <option value="doors">Architectural Entryway &amp; Patio Doors</option>
+                      <option value="siding">Exterior Siding &amp; Architectural Trim</option>
+                      <option value="decks">Custom Mountain View Decks</option>
+                      <option value="multiple">Complete Exterior Renovation Package</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* City Input with Auto-Select animation from Map */}
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label
+                      htmlFor="quote-city-input"
+                      className="block text-[11px] font-mono uppercase tracking-wider text-neutral-600 font-medium"
+                    >
+                      Your City / Location
+                    </label>
+                    {highlightCity && (
+                      <span className="text-[10px] font-mono text-[#A45A2A] font-bold uppercase tracking-wider animate-pulse flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#A45A2A]" />
+                        Auto-selected from map
+                      </span>
+                    )}
+                  </div>
+                  <input
+                    id="quote-city-input"
+                    type="text"
+                    placeholder="e.g. Loveland, Fort Collins, Windsor, Longmont..."
+                    value={formData.city}
+                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                    className={`w-full px-4 py-3 rounded-xl border text-sm text-neutral-800 placeholder-neutral-400 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#A45A2A]/30 focus:border-[#A45A2A] ${
+                      highlightCity
+                        ? "border-[#A45A2A] ring-2 ring-[#A45A2A]/40 bg-[#FFF7F0]"
+                        : "border-neutral-200/90 bg-white"
+                    }`}
+                  />
+                </div>
+
+                {/* Project Details */}
+                <div>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-neutral-600 mb-1.5 font-medium">
+                    Project Notes &amp; Scope
+                  </label>
+                  <textarea
+                    rows={3}
+                    placeholder="Tell us what you have in mind (e.g. approximate window count, wood or composite preferences, desired timeline)..."
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    className="w-full px-4 py-3 rounded-xl border border-neutral-200/90 bg-white text-sm text-neutral-800 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#A45A2A]/30 focus:border-[#A45A2A] transition-all resize-none"
+                  />
+                </div>
+
+                {/* Submit Action */}
+                <div className="pt-2">
                   <button
                     type="submit"
-                    className="w-full bg-[#A45A2A] hover:bg-[#8B4A20] text-white py-4 rounded-xl font-bold text-base transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full bg-[#A45A2A] hover:bg-[#8B4A20] text-white py-4 rounded-xl font-bold text-sm uppercase tracking-wider transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
                   >
-                    <span>Submit Free Quote Request</span>
+                    <span>Request Free Consultation</span>
                     <Send className="w-4 h-4" />
                   </button>
+                </div>
 
-                  <p className="text-[11px] text-neutral-400 text-center">
-                    We respect your privacy. Your information is never sold or shared.
-                  </p>
-                </form>
-              )}
-            </div>
+                {/* Privacy & Trust Footnote */}
+                <div className="flex items-center justify-center gap-2 text-[11px] text-neutral-500 text-center pt-1">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#1F302B]" />
+                  <span>Your privacy is respected. No spam, ever.</span>
+                </div>
+              </form>
+            )}
           </div>
+
         </div>
+
       </div>
     </section>
   );
