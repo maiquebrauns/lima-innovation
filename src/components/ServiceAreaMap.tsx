@@ -120,50 +120,11 @@ export function ServiceAreaMap() {
       try {
         const maplibregl = await import("maplibre-gl");
 
-        // High-performance architectural dark style using public Esri Dark Gray Canvas
-        // Completely free, zero API key required, zero watermarks, ultra-fast CDN loading
-        const darkCartoStyle: any = {
-          version: 8,
-          sources: {
-            "esri-dark-base": {
-              type: "raster",
-              tiles: [
-                "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
-              ],
-              tileSize: 256,
-              attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
-            },
-            "esri-dark-reference": {
-              type: "raster",
-              tiles: [
-                "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}",
-              ],
-              tileSize: 256,
-            },
-          },
-          layers: [
-            {
-              id: "esri-dark-base-layer",
-              type: "raster",
-              source: "esri-dark-base",
-              paint: {
-                "raster-opacity": 0.95,
-              },
-            },
-            {
-              id: "esri-dark-reference-layer",
-              type: "raster",
-              source: "esri-dark-reference",
-              paint: {
-                "raster-opacity": 0.9,
-              },
-            },
-          ],
-        };
-
+        // OpenFreeMap Dark Vector Style via MapLibre GL JS
+        // Free vector tiles hosted on Cloudflare Edge with OSM data
         const map = new maplibregl.Map({
           container: mapContainerRef.current,
-          style: darkCartoStyle,
+          style: "https://tiles.openfreemap.org/styles/dark",
           center: INITIAL_CENTER,
           zoom: INITIAL_ZOOM,
           minZoom: 8,
@@ -173,73 +134,85 @@ export function ServiceAreaMap() {
           cooperativeGestures: true, // Use Cmd/Ctrl + scroll to zoom
         });
 
-        // Add minimal compact attribution
+        // Add minimal compact attribution for OpenStreetMap & OpenFreeMap
         map.addControl(
           new maplibregl.AttributionControl({
             compact: true,
+            customAttribution:
+              '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> &copy; <a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a>',
           }),
           "bottom-right"
         );
 
-        // Instant fallback timer so the skeleton never gets stuck
+        // Safety fallback timer so loading skeleton never hangs
         const loadTimer = setTimeout(() => {
           if (isMounted) setIsMapLoaded(true);
         }, 1200);
 
-        map.on("load", () => {
+        const setupLayersAndReveal = () => {
           clearTimeout(loadTimer);
           if (!isMounted) return;
           setIsMapLoaded(true);
 
-          // Add GeoJSON for subtle decorative connecting lines between Loveland HQ and other cities
-          const hub = NORTHERN_COLORADO_LOCATIONS[0];
-          const linesGeoJson: any = {
-            type: "FeatureCollection",
-            features: NORTHERN_COLORADO_LOCATIONS.filter((l) => !l.isPrimary).map((loc) => ({
-              type: "Feature",
-              properties: {
-                cityId: loc.id,
+          if (!map.getSource("hub-connections")) {
+            // Add GeoJSON for subtle decorative connecting lines between Loveland HQ and other cities
+            const hub = NORTHERN_COLORADO_LOCATIONS[0];
+            const linesGeoJson: any = {
+              type: "FeatureCollection",
+              features: NORTHERN_COLORADO_LOCATIONS.filter((l) => !l.isPrimary).map((loc) => ({
+                type: "Feature",
+                properties: {
+                  cityId: loc.id,
+                },
+                geometry: {
+                  type: "LineString",
+                  coordinates: [
+                    [hub.lng, hub.lat],
+                    [loc.lng, loc.lat],
+                  ],
+                },
+              })),
+            };
+
+            map.addSource("hub-connections", {
+              type: "geojson",
+              data: linesGeoJson,
+            });
+
+            // Glow layer under connection lines
+            map.addLayer({
+              id: "hub-lines-glow",
+              type: "line",
+              source: "hub-connections",
+              paint: {
+                "line-color": "#A45A2A",
+                "line-width": 3,
+                "line-opacity": 0.25,
+                "line-blur": 2,
               },
-              geometry: {
-                type: "LineString",
-                coordinates: [
-                  [hub.lng, hub.lat],
-                  [loc.lng, loc.lat],
-                ],
+            });
+
+            // Delicate dashed connector
+            map.addLayer({
+              id: "hub-lines",
+              type: "line",
+              source: "hub-connections",
+              paint: {
+                "line-color": "#C47A4A",
+                "line-width": 1.5,
+                "line-opacity": 0.6,
+                "line-dasharray": [2, 3],
               },
-            })),
-          };
+            });
+          }
+        };
 
-          map.addSource("hub-connections", {
-            type: "geojson",
-            data: linesGeoJson,
-          });
-
-          // Glow layer under connection lines
-          map.addLayer({
-            id: "hub-lines-glow",
-            type: "line",
-            source: "hub-connections",
-            paint: {
-              "line-color": "#A45A2A",
-              "line-width": 3,
-              "line-opacity": 0.15,
-              "line-blur": 2,
-            },
-          });
-
-          // Delicate dashed connector
-          map.addLayer({
-            id: "hub-lines",
-            type: "line",
-            source: "hub-connections",
-            paint: {
-              "line-color": "#C47A4A",
-              "line-width": 1.5,
-              "line-opacity": 0.5,
-              "line-dasharray": [2, 3],
-            },
-          });
+        map.on("load", setupLayersAndReveal);
+        map.on("styledata", () => {
+          if (isMounted && map.isStyleLoaded()) {
+            setupLayersAndReveal();
+          }
+        });
 
           // Add custom HTML Markers for each city
           NORTHERN_COLORADO_LOCATIONS.forEach((loc) => {
@@ -302,7 +275,6 @@ export function ServiceAreaMap() {
 
             markersRef.current[loc.id] = marker;
           });
-        });
 
         mapInstanceRef.current = map;
       } catch (err: any) {
