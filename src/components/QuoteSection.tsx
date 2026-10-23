@@ -46,25 +46,30 @@ export function QuoteSection() {
       <div id="quote" className="absolute top-20 left-0 pointer-events-none" />
 
       {/* Organic Wave Transition from Service Area (#F5F5F5 / neutral-100) to Contact Section */}
-      <div className="w-full overflow-hidden leading-none bg-neutral-100 pointer-events-none -mb-px">
+      <div className="w-full overflow-hidden leading-none bg-[#F5F5F5] pointer-events-none -mb-px relative z-20">
         <svg
           viewBox="0 0 1440 120"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="relative block w-full h-12 sm:h-20 lg:h-28 text-[#121B18]"
+          className="relative block w-full h-12 sm:h-20 lg:h-28"
           preserveAspectRatio="none"
         >
-          {/* Crisp solid architectural wave flowing up and down */}
+          {/* Top solid neutral fill (completely opaque, prevents any background bleed) */}
+          <path
+            d="M0,0 L1440,0 L1440,45 C1380,30 1260,15 1080,50 C900,95 720,95 540,50 C360,10 180,10 0,45 Z"
+            fill="#F5F5F5"
+          />
+          {/* Bottom solid dark fill flowing up and down */}
           <path
             d="M0,45 C180,10 360,10 540,50 C720,95 900,95 1080,50 C1260,15 1380,30 1440,45 L1440,120 L0,120 Z"
-            fill="currentColor"
+            fill="#121B18"
           />
         </svg>
       </div>
 
-      <div className="pt-10 sm:pt-14 pb-20 sm:pb-28 lg:pb-32 relative">
-        {/* Decorative architectural ambient glows */}
-        <div className="absolute -top-40 -left-40 w-[550px] h-[550px] rounded-full bg-[#1F302B]/60 blur-[140px] pointer-events-none" />
+      <div className="pt-10 sm:pt-14 pb-20 sm:pb-28 lg:pb-32 relative z-10 overflow-hidden">
+        {/* Decorative architectural ambient glows (safely positioned below wave) */}
+        <div className="absolute top-24 -left-40 w-[550px] h-[550px] rounded-full bg-[#1F302B]/60 blur-[140px] pointer-events-none" />
         <div className="absolute -bottom-40 -right-40 w-[550px] h-[550px] rounded-full bg-[#A45A2A]/20 blur-[150px] pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
