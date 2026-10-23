@@ -120,40 +120,13 @@ export function ServiceAreaMap() {
       try {
         const maplibregl = await import("maplibre-gl");
 
-        // Custom Dark Cartographic Style with CARTO Dark Matter raster tiles
-        // styled to match Lima Innovations' forest green (#1F302B) palette
-        const customStyle: any = {
-          version: 8,
-          sources: {
-            "carto-dark": {
-              type: "raster",
-              tiles: [
-                "https://a.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}@2x.png",
-                "https://b.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}@2x.png",
-                "https://c.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}@2x.png",
-              ],
-              tileSize: 256,
-              attribution:
-                '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>',
-            },
-          },
-          layers: [
-            {
-              id: "carto-dark-base",
-              type: "raster",
-              source: "carto-dark",
-              paint: {
-                "raster-opacity": 0.92,
-                "raster-contrast": 0.1,
-                "raster-brightness-min": 0.05,
-              },
-            },
-          ],
-        };
+        // Production-quality vector style via OpenFreeMap (OpenStreetMap data)
+        // 100% free, zero API key required, hosted on Cloudflare Edge with no watermarks
+        const openFreeMapStyle = "https://tiles.openfreemap.org/styles/dark";
 
         const map = new maplibregl.Map({
           container: mapContainerRef.current,
-          style: customStyle,
+          style: openFreeMapStyle,
           center: INITIAL_CENTER,
           zoom: INITIAL_ZOOM,
           minZoom: 8,
@@ -163,10 +136,12 @@ export function ServiceAreaMap() {
           cooperativeGestures: true, // Use Cmd/Ctrl + scroll to zoom
         });
 
-        // Add minimal compact attribution
+        // Add minimal compact attribution for OpenStreetMap & OpenFreeMap
         map.addControl(
           new maplibregl.AttributionControl({
             compact: true,
+            customAttribution:
+              '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> &copy; <a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a>',
           }),
           "bottom-right"
         );
@@ -354,10 +329,10 @@ export function ServiceAreaMap() {
       {/* 1. MAP CANVAS CONTAINER */}
       <div className="relative w-full h-[460px] sm:h-[500px] lg:h-[520px] rounded-2xl overflow-hidden bg-[#162420] border border-[#2D443D] shadow-xl">
         
-        {/* Architectural atmospheric green tint overlay for Carto Dark tiles */}
+        {/* Architectural atmospheric green tint overlay */}
         <div 
           ref={mapContainerRef} 
-          className="absolute inset-0 w-full h-full [&_.maplibregl-canvas]:filter [&_.maplibregl-canvas]:contrast-115 [&_.maplibregl-canvas]:brightness-95 [&_.maplibregl-canvas]:hue-rotate-[85deg] [&_.maplibregl-canvas]:saturate-110"
+          className="absolute inset-0 w-full h-full [&_.maplibregl-canvas]:filter [&_.maplibregl-canvas]:contrast-105 [&_.maplibregl-canvas]:hue-rotate-[55deg] [&_.maplibregl-canvas]:brightness-95"
         />
 
         {/* Ambient forest vignette around map edges */}
