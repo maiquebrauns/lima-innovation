@@ -118,35 +118,73 @@ export function ServiceDetailExperience({ service }: ServiceDetailExperienceProp
     const container = containerRef.current;
     if (!video || !container) return;
 
-    let duration = 0;
-    let target = 0;
+    let duration = video.duration || 10;
+    let isSeeking = false;
+    let pendingTime: number | null = null;
+    let targetTime = 0;
+    let targetProgress = 0;
     let ticking = false;
+    let isReadyFired = false;
 
-    if (video.readyState >= 1 && video.duration) {
-      duration = video.duration;
-    }
+    const setVideoTime = (time: number) => {
+      const safeTime = Math.max(0.001, Math.min(duration - 0.05, time));
+      if (isSeeking) {
+        pendingTime = safeTime;
+      } else {
+        isSeeking = true;
+        try {
+          video.currentTime = safeTime;
+        } catch {
+          isSeeking = false;
+        }
+      }
+    };
+
+    const handleSeeked = () => {
+      isSeeking = false;
+      if (pendingTime !== null) {
+        const nextTime = pendingTime;
+        pendingTime = null;
+        setVideoTime(nextTime);
+      }
+    };
+
+    video.addEventListener("seeked", handleSeeked);
 
     const markReady = () => {
-      duration = video.duration || duration || 10;
+      if (isReadyFired) return;
+      isReadyFired = true;
+      if (video.duration && Number.isFinite(video.duration)) {
+        duration = video.duration;
+      } else if (!duration) {
+        duration = 10;
+      }
       setIsReady(true);
+      setVideoTime(0.001);
       onScroll();
     };
 
     const handleLoadedMetadata = () => {
-      duration = video.duration || 10;
+      if (video.duration && Number.isFinite(video.duration)) {
+        duration = video.duration;
+      }
       markReady();
     };
 
     video.addEventListener("loadedmetadata", handleLoadedMetadata);
     video.addEventListener("canplaythrough", markReady);
-    const fallbackTimer = setTimeout(markReady, 3500);
+    const fallbackTimer = setTimeout(markReady, 1000);
+
+    if (video.readyState >= 1) {
+      handleLoadedMetadata();
+    }
 
     const apply = () => {
       ticking = false;
       if (duration > 0 && Number.isFinite(duration)) {
-        video.currentTime = target * duration;
+        setVideoTime(targetTime);
       }
-      setProgress(target);
+      setProgress(targetProgress);
     };
 
     const onScroll = () => {
@@ -154,7 +192,8 @@ export function ServiceDetailExperience({ service }: ServiceDetailExperienceProp
       const rect = container.getBoundingClientRect();
       const scrollable = container.offsetHeight - window.innerHeight;
       const p = scrollable > 0 ? -rect.top / scrollable : 0;
-      target = Math.min(1, Math.max(0, p));
+      targetProgress = Math.min(1, Math.max(0, p));
+      targetTime = targetProgress * duration;
 
       if (document.hidden) {
         apply();
@@ -170,6 +209,7 @@ export function ServiceDetailExperience({ service }: ServiceDetailExperienceProp
 
     return () => {
       clearTimeout(fallbackTimer);
+      video.removeEventListener("seeked", handleSeeked);
       video.removeEventListener("loadedmetadata", handleLoadedMetadata);
       video.removeEventListener("canplaythrough", markReady);
       window.removeEventListener("scroll", onScroll);
