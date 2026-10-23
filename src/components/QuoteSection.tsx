@@ -40,16 +40,40 @@ export function QuoteSection() {
   return (
     <section
       id="contact"
-      className="py-20 sm:py-28 lg:py-32 bg-[#121B18] text-white relative overflow-hidden scroll-mt-16"
+      className="bg-[#121B18] text-white relative overflow-hidden scroll-mt-16"
     >
       {/* Anchor alias so #quote also scrolls here */}
-      <div id="quote" className="absolute -top-16 left-0 pointer-events-none" />
+      <div id="quote" className="absolute top-20 left-0 pointer-events-none" />
 
-      {/* Decorative architectural ambient glows */}
-      <div className="absolute -top-40 -left-40 w-[550px] h-[550px] rounded-full bg-[#1F302B]/60 blur-[140px] pointer-events-none" />
-      <div className="absolute -bottom-40 -right-40 w-[550px] h-[550px] rounded-full bg-[#A45A2A]/20 blur-[150px] pointer-events-none" />
+      {/* Organic Wave Transition from Service Area (#F5F5F5 / neutral-100) to Contact Section */}
+      <div className="w-full overflow-hidden leading-none bg-neutral-100 pointer-events-none -mb-px">
+        <svg
+          viewBox="0 0 1440 120"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="relative block w-full h-12 sm:h-20 lg:h-28 text-[#121B18]"
+          preserveAspectRatio="none"
+        >
+          {/* Layer 1: Ambient architectural depth wave */}
+          <path
+            d="M0,65 C200,25 380,25 560,65 C740,105 920,105 1100,65 C1280,30 1380,45 1440,65 L1440,120 L0,120 Z"
+            fill="#1F302B"
+            fillOpacity="0.45"
+          />
+          {/* Layer 2: Main solid wave flowing up and down */}
+          <path
+            d="M0,45 C180,10 360,10 540,50 C720,95 900,95 1080,50 C1260,15 1380,30 1440,45 L1440,120 L0,120 Z"
+            fill="currentColor"
+          />
+        </svg>
+      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="pt-10 sm:pt-14 pb-20 sm:pb-28 lg:pb-32 relative">
+        {/* Decorative architectural ambient glows */}
+        <div className="absolute -top-40 -left-40 w-[550px] h-[550px] rounded-full bg-[#1F302B]/60 blur-[140px] pointer-events-none" />
+        <div className="absolute -bottom-40 -right-40 w-[550px] h-[550px] rounded-full bg-[#A45A2A]/20 blur-[150px] pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Main Architectural Split Container */}
         <div className="rounded-3xl sm:rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl bg-[#17231F] grid grid-cols-1 lg:grid-cols-12 items-stretch">
@@ -327,6 +351,7 @@ export function QuoteSection() {
         </div>
 
       </div>
-    </section>
+    </div>
+  </section>
   );
 }

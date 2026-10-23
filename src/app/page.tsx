@@ -18,7 +18,7 @@ export default function HomePage() {
       <ProjectsSection />
 
       {/* 5. SERVICE AREA SECTION */}
-      <section id="service-area" className="py-24 sm:py-32 bg-neutral-100 border-t border-neutral-200">
+      <section id="service-area" className="pt-24 sm:pt-32 pb-14 sm:pb-16 bg-neutral-100 border-t border-neutral-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Centered Editorial Header (Mesma fonte e estilo da seção acima) */}
