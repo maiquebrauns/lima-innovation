@@ -124,20 +124,6 @@ export function ProjectsSection() {
           ))}
         </div>
 
-        {/* Bottom Editorial Footer / CTA */}
-        <div className="mt-20 sm:mt-28 pt-8 border-t border-neutral-200 flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-neutral-500">
-          <span className="font-mono uppercase tracking-wider">
-            All installations executed by Lima Innovations LLC in Colorado
-          </span>
-          <Link
-            href="/#contact"
-            className="text-[#1F302B] hover:text-[#A45A2A] font-semibold uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors"
-          >
-            <span>Start Your Architectural Exterior Project</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-
       </div>
     </section>
   );
