@@ -126,6 +126,7 @@ export function ServiceDetailExperience({ service }: ServiceDetailExperienceProp
     let ticking = false;
     let isReadyFired = false;
 
+    // 1. Core video seeker
     const setVideoTime = (time: number) => {
       const safeTime = Math.max(0.001, Math.min(duration - 0.05, time));
       if (isSeeking) {
@@ -149,8 +150,33 @@ export function ServiceDetailExperience({ service }: ServiceDetailExperienceProp
       }
     };
 
-    video.addEventListener("seeked", handleSeeked);
+    // 2. Render frame apply
+    const apply = () => {
+      ticking = false;
+      if (duration > 0 && Number.isFinite(duration)) {
+        setVideoTime(targetTime);
+      }
+      setProgress(targetProgress);
+    };
 
+    // 3. Scroll position calculator
+    const onScroll = () => {
+      if (!container) return;
+      const rect = container.getBoundingClientRect();
+      const scrollable = container.offsetHeight - window.innerHeight;
+      const p = scrollable > 0 ? -rect.top / scrollable : 0;
+      targetProgress = Math.min(1, Math.max(0, p));
+      targetTime = targetProgress * duration;
+
+      if (document.hidden) {
+        apply();
+      } else if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(apply);
+      }
+    };
+
+    // 4. Ready state handler
     const markReady = () => {
       if (isReadyFired) return;
       isReadyFired = true;
@@ -171,41 +197,21 @@ export function ServiceDetailExperience({ service }: ServiceDetailExperienceProp
       markReady();
     };
 
+    // 5. Register listeners
+    video.addEventListener("seeked", handleSeeked);
     video.addEventListener("loadedmetadata", handleLoadedMetadata);
     video.addEventListener("canplaythrough", markReady);
-    const fallbackTimer = setTimeout(markReady, 1000);
-
-    if (video.readyState >= 1) {
-      handleLoadedMetadata();
-    }
-
-    const apply = () => {
-      ticking = false;
-      if (duration > 0 && Number.isFinite(duration)) {
-        setVideoTime(targetTime);
-      }
-      setProgress(targetProgress);
-    };
-
-    const onScroll = () => {
-      if (!container) return;
-      const rect = container.getBoundingClientRect();
-      const scrollable = container.offsetHeight - window.innerHeight;
-      const p = scrollable > 0 ? -rect.top / scrollable : 0;
-      targetProgress = Math.min(1, Math.max(0, p));
-      targetTime = targetProgress * duration;
-
-      if (document.hidden) {
-        apply();
-      } else if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(apply);
-      }
-    };
-
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
-    onScroll();
+
+    const fallbackTimer = setTimeout(markReady, 1000);
+
+    // 6. Safe immediate invocation after all helpers are initialized
+    if (video.readyState >= 1) {
+      handleLoadedMetadata();
+    } else {
+      onScroll();
+    }
 
     return () => {
       clearTimeout(fallbackTimer);

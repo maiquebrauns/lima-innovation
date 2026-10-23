@@ -162,6 +162,8 @@ export function ServiceAreaMap() {
           ],
         };
 
+        if (!mapContainerRef.current || !isMounted || mapInstanceRef.current) return;
+
         const map = new maplibregl.Map({
           container: mapContainerRef.current,
           style: osmStyle,
