@@ -21,25 +21,27 @@ export default function HomePage() {
       <section id="service-area" className="py-24 sm:py-32 bg-neutral-100 border-t border-neutral-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          {/* Centered Editorial Header */}
-          <div className="max-w-3xl mx-auto text-center space-y-4 mb-12 sm:mb-16">
-            <span className="text-xs uppercase font-extrabold tracking-widest text-[#A45A2A] bg-[#A45A2A]/10 px-3.5 py-1.5 rounded-full inline-block">
-              Service Area
-            </span>
-            <h2 className="text-3xl sm:text-5xl font-extrabold text-[#1F302B] tracking-tight">
-              Proudly Serving Northern Colorado
-            </h2>
-            <p className="text-neutral-600 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
-              Based in Loveland, CO, Lima Innovations brings top-tier exterior craftsmanship to surrounding communities. Wherever you are in Northern Colorado, we bring our tools and dedication to your doorstep.
-            </p>
-            <div className="pt-1">
-              <a
-                href={LIMA_CONFIG.company.phoneHref}
-                className="inline-flex items-center gap-2 text-sm font-bold text-[#A45A2A] hover:underline"
-              >
-                <span>Have questions about your location? Call {LIMA_CONFIG.company.phone}</span>
-                <ArrowRight className="w-4 h-4" />
-              </a>
+          {/* Centered Editorial Header (Mesma fonte e estilo da seção acima) */}
+          <div className="mb-12 sm:mb-16 text-center">
+            <div className="pb-8 border-b border-neutral-200/80 max-w-4xl mx-auto">
+              <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#A45A2A] font-semibold block mb-3">
+                Service Area • Loveland &amp; Northern Colorado
+              </span>
+              <h2 className="text-3xl sm:text-5xl font-normal text-[#1F302B] tracking-tight">
+                Proudly Serving Northern Colorado.
+              </h2>
+              <p className="text-neutral-600 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto mt-4 font-normal">
+                Based in Loveland, CO, Lima Innovations brings top-tier exterior craftsmanship to surrounding communities. Wherever you are in Northern Colorado, we bring our tools and dedication to your doorstep.
+              </p>
+              <div className="pt-3">
+                <a
+                  href={LIMA_CONFIG.company.phoneHref}
+                  className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#A45A2A] hover:underline uppercase tracking-wider"
+                >
+                  <span>Have questions about your location? Call {LIMA_CONFIG.company.phone}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </a>
+              </div>
             </div>
           </div>
 
