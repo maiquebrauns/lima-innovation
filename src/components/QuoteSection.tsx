@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Send, CheckCircle2, ShieldCheck, Clock, Sparkles } from "lucide-react";
 import { LIMA_CONFIG } from "@/data/content";
 
@@ -14,6 +14,22 @@ export function QuoteSection() {
     message: "",
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [highlightCity, setHighlightCity] = useState(false);
+
+  // Automatically update city when selected from the Service Area Map
+  useEffect(() => {
+    const handleCitySelect = (e: any) => {
+      const city = e.detail?.city;
+      if (city) {
+        setFormData((prev) => ({ ...prev, city }));
+        setHighlightCity(true);
+        setTimeout(() => setHighlightCity(false), 2500);
+      }
+    };
+
+    window.addEventListener("lima:select-city", handleCitySelect);
+    return () => window.removeEventListener("lima:select-city", handleCitySelect);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -167,15 +183,30 @@ export function QuoteSection() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700 mb-1.5">
-                      Your City / Location
-                    </label>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label 
+                        htmlFor="quote-city-input"
+                        className="block text-xs font-bold uppercase tracking-wider text-neutral-700"
+                      >
+                        Your City / Location
+                      </label>
+                      {highlightCity && (
+                        <span className="text-[10px] font-mono text-[#A45A2A] font-bold uppercase animate-pulse">
+                          Auto-selected from map &bull;
+                        </span>
+                      )}
+                    </div>
                     <input
+                      id="quote-city-input"
                       type="text"
                       placeholder="e.g. Loveland, Fort Collins, Windsor..."
                       value={formData.city}
                       onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#A45A2A]/40 focus:border-[#A45A2A] text-sm text-neutral-800"
+                      className={`w-full px-4 py-3 rounded-xl border text-sm text-neutral-800 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#A45A2A]/40 focus:border-[#A45A2A] ${
+                        highlightCity
+                          ? "border-[#A45A2A] ring-2 ring-[#A45A2A]/50 bg-[#FFF7F0]"
+                          : "border-neutral-200 bg-white"
+                      }`}
                     />
                   </div>
 

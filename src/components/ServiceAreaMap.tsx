@@ -350,6 +350,32 @@ export function ServiceAreaMap() {
     }
   }, []);
 
+  const handleRequestService = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (typeof window !== "undefined") {
+      // Dispatch custom event to auto-fill city in the quote form
+      window.dispatchEvent(
+        new CustomEvent("lima:select-city", {
+          detail: { city: selectedLocation.city },
+        })
+      );
+
+      // Smooth scroll to contact/quote section
+      const contactEl = document.getElementById("contact");
+      if (contactEl) {
+        contactEl.scrollIntoView({ behavior: "smooth" });
+      }
+
+      // Smooth focus on city input
+      setTimeout(() => {
+        const cityInput = document.getElementById("quote-city-input") as HTMLInputElement;
+        if (cityInput) {
+          cityInput.focus();
+        }
+      }, 500);
+    }
+  };
+
   const zoomIn = () => {
     if (mapInstanceRef.current) {
       mapInstanceRef.current.zoomIn({ duration: 300 });
@@ -435,7 +461,8 @@ export function ServiceAreaMap() {
             {/* Premium Frosted Liquid-Glass Request Button */}
             <a
               href="#contact"
-              className="group relative overflow-hidden inline-flex items-center justify-center w-full gap-2 py-2.5 px-4 rounded-xl text-xs font-bold uppercase tracking-wider text-white bg-white/10 hover:bg-white/20 active:bg-white/15 backdrop-blur-md border border-white/25 hover:border-white/45 shadow-[0_4px_20px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.35)] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+              onClick={handleRequestService}
+              className="group relative overflow-hidden inline-flex items-center justify-center w-full gap-2 py-2.5 px-4 rounded-xl text-xs font-bold uppercase tracking-wider text-white bg-white/10 hover:bg-white/20 active:bg-white/15 backdrop-blur-md border border-white/25 hover:border-white/45 shadow-[0_4px_20px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.35)] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
             >
               {/* Subtle top specular glass light */}
               <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/50 to-transparent pointer-events-none" />
