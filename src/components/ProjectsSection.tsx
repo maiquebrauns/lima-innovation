@@ -14,6 +14,7 @@ interface CategoryShowcaseItem {
   altText: string;
   colSpan: string;
   aspect: string;
+  offsetClass?: string;
 }
 
 const CATEGORY_SHOWCASE: CategoryShowcaseItem[] = [
@@ -46,6 +47,7 @@ const CATEGORY_SHOWCASE: CategoryShowcaseItem[] = [
     altText: "Exterior siding specialist installing weather-tight horizontal lap panels in Loveland, CO",
     colSpan: "col-span-12 md:col-span-5",
     aspect: "aspect-[3/4]",
+    offsetClass: "md:-mt-24 lg:-mt-32",
   },
   {
     id: "decks",
@@ -79,7 +81,7 @@ export function ProjectsSection() {
         {/* Asymmetric Editorial Architecture Grid (4 Categorias com ritmo assimétrico) */}
         <div className="grid grid-cols-12 gap-x-8 gap-y-16 sm:gap-y-24 items-start">
           {CATEGORY_SHOWCASE.map((item) => (
-            <div key={item.id} className={`${item.colSpan} group flex flex-col`}>
+            <div key={item.id} className={`${item.colSpan} ${item.offsetClass || ""} group flex flex-col`}>
               <Link
                 href={item.href}
                 className="block focus:outline-none"
