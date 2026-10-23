@@ -1,99 +1,80 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React from "react";
+import { motion } from "framer-motion";
 
 interface ScrollRevealProps {
   children: React.ReactNode;
   className?: string;
-  delay?: number; // Delay in milliseconds
-  duration?: number; // Duration in milliseconds
-  distance?: number; // Translate distance in pixels
+  delay?: number; // Accepts seconds (e.g. 0.15) or milliseconds (e.g. 150)
+  duration?: number; // Accepts seconds (e.g. 0.75) or milliseconds (e.g. 750)
+  distance?: number; // in pixels, default 40
   direction?: "up" | "down" | "left" | "right" | "none";
-  threshold?: number;
+  scale?: number; // starting scale, default 0.96
   once?: boolean;
+  amount?: number | "some" | "all";
 }
 
 export function ScrollReveal({
   children,
   className = "",
   delay = 0,
-  duration = 750,
-  distance = 28,
+  duration = 0.75,
+  distance = 36,
   direction = "up",
-  threshold = 0.12,
-  once = true,
+  scale = 0.97,
+  once = false,
+  amount = 0.12,
 }: ScrollRevealProps) {
-  const [isVisible, setIsVisible] = useState(false);
-  const elementRef = useRef<HTMLDivElement>(null);
+  // Normalize seconds vs milliseconds
+  const normalizedDelay = delay > 5 ? delay / 1000 : delay;
+  const normalizedDuration = duration > 5 ? duration / 1000 : duration;
 
-  useEffect(() => {
-    // Respect reduced motion preferences
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setIsVisible(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          if (once && elementRef.current) {
-            observer.unobserve(elementRef.current);
-          }
-        } else if (!once) {
-          setIsVisible(false);
-        }
-      },
-      {
-        threshold,
-        rootMargin: "0px 0px -40px 0px",
-      }
-    );
-
-    const currentElem = elementRef.current;
-    if (currentElem) {
-      observer.observe(currentElem);
-    }
-
-    return () => {
-      if (currentElem) {
-        observer.unobserve(currentElem);
-      }
-    };
-  }, [threshold, once]);
-
-  // Compute transform offset based on direction
-  const getTransform = () => {
-    if (isVisible) return "translate3d(0, 0, 0)";
+  const getInitialPosition = () => {
     switch (direction) {
       case "up":
-        return `translate3d(0, ${distance}px, 0)`;
+        return { y: distance, x: 0 };
       case "down":
-        return `translate3d(0, -${distance}px, 0)`;
+        return { y: -distance, x: 0 };
       case "left":
-        return `translate3d(${distance}px, 0, 0)`;
+        return { x: distance, y: 0 };
       case "right":
-        return `translate3d(-${distance}px, 0, 0)`;
+        return { x: -distance, y: 0 };
       case "none":
       default:
-        return "translate3d(0, 0, 0)";
+        return { x: 0, y: 0 };
     }
   };
 
+  const initialPos = getInitialPosition();
+
   return (
-    <div
-      ref={elementRef}
-      className={`will-change-[opacity,transform] ${className}`}
-      style={{
-        opacity: isVisible ? 1 : 0,
-        transform: getTransform(),
-        transitionProperty: "opacity, transform",
-        transitionDuration: `${duration}ms`,
-        transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
-        transitionDelay: `${delay}ms`,
+    <motion.div
+      initial={{
+        opacity: 0,
+        scale: scale,
+        x: initialPos.x,
+        y: initialPos.y,
       }}
+      whileInView={{
+        opacity: 1,
+        scale: 1,
+        x: 0,
+        y: 0,
+      }}
+      viewport={{
+        once,
+        amount,
+        margin: "0px 0px -40px 0px",
+      }}
+      transition={{
+        duration: normalizedDuration,
+        delay: normalizedDelay,
+        ease: [0.16, 1, 0.3, 1], // Apple-style smooth cubic bezier
+      }}
+      className={className}
     >
       {children}
-    </div>
+    </motion.div>
   );
 }
