@@ -22,7 +22,10 @@ export function QuoteSection() {
   };
 
   return (
-    <section id="quote" className="py-24 bg-[#1F302B] text-white relative overflow-hidden">
+    <section id="contact" className="py-24 bg-[#1F302B] text-white relative overflow-hidden scroll-mt-16">
+      {/* Anchor alias so #quote also scrolls here */}
+      <div id="quote" className="absolute -top-16 left-0 pointer-events-none" />
+      
       {/* Decorative mountain background glow */}
       <div className="absolute top-0 right-0 -mr-40 -mt-40 w-96 h-96 rounded-full bg-[#A45A2A]/20 blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 -ml-40 -mb-40 w-96 h-96 rounded-full bg-[#2D443D]/60 blur-3xl pointer-events-none" />

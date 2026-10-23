@@ -73,8 +73,8 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/#quote" className="hover:text-[#A45A2A] transition-colors">
-                  Request a Free Quote
+                <Link href="/#contact" className="hover:text-[#A45A2A] transition-colors">
+                  Request a Free Quote / Contact
                 </Link>
               </li>
               <li>
@@ -118,7 +118,7 @@ export function Footer() {
             </div>
             <div className="pt-2">
               <Link
-                href="/#quote"
+                href="/#contact"
                 className="inline-flex items-center gap-2 bg-[#A45A2A] hover:bg-[#8B4A20] text-white px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors"
               >
                 <span>Free Consultation</span>

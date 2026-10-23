@@ -40,6 +40,47 @@ export function Navbar() {
     setDropdownOpen(false);
   }, [pathname]);
 
+  // Handle smooth scroll for all hash links (#contact, #quote, #projects, etc.)
+  useEffect(() => {
+    const handleAnchorClick = (e: MouseEvent) => {
+      const target = (e.target as HTMLElement).closest("a");
+      if (!target) return;
+
+      const href = target.getAttribute("href");
+      if (!href) return;
+
+      // Handle both "#hash" and "/#hash" when currently on home page
+      const isHashLink = href.startsWith("#") || (href.startsWith("/#") && pathname === "/");
+      if (isHashLink) {
+        const hash = href.replace(/^\/?#/, "");
+        const element = document.getElementById(hash);
+        if (element) {
+          e.preventDefault();
+          element.scrollIntoView({ behavior: "smooth" });
+          window.history.pushState(null, "", `#${hash}`);
+          setMobileMenuOpen(false);
+        }
+      }
+    };
+
+    document.addEventListener("click", handleAnchorClick);
+    return () => document.removeEventListener("click", handleAnchorClick);
+  }, [pathname]);
+
+  // Handle incoming hash when navigating to home page from other routes
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash) {
+      const hash = window.location.hash.replace("#", "");
+      const timer = setTimeout(() => {
+        const element = document.getElementById(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [pathname]);
+
   const isSolid = !isHome || isScrolled;
 
   return (
