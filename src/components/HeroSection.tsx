@@ -29,16 +29,11 @@ export function HeroSection() {
     const markReady = () => {
       duration = video.duration || duration || 10;
       setIsReady(true);
-      // Prime decoder on mobile/iOS so it never shows a black frame
-      if (video.paused && video.currentTime === 0) {
-        const playPromise = video.play();
-        if (playPromise !== undefined) {
-          playPromise
-            .then(() => {
-              video.pause();
-            })
-            .catch(() => {});
-        }
+      // Prime decoder by setting micro-offset without calling video.play()
+      if (video.currentTime === 0) {
+        try {
+          video.currentTime = 0.001;
+        } catch {}
       }
       onScroll();
     };
@@ -50,18 +45,14 @@ export function HeroSection() {
 
     video.addEventListener("loadedmetadata", handleLoadedMetadata);
     video.addEventListener("canplaythrough", markReady);
-    const fallbackTimer = setTimeout(markReady, 3500);
+    const fallbackTimer = setTimeout(markReady, 2000);
 
     const apply = () => {
       ticking = false;
       if (duration > 0 && Number.isFinite(duration)) {
-        if (!video.seeking) {
-          try {
-            video.currentTime = target * duration;
-          } catch {
-            // Safari rapid seeking guard
-          }
-        }
+        try {
+          video.currentTime = target * duration;
+        } catch {}
       }
       setProgress(target);
     };
