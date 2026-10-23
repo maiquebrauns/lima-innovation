@@ -45,6 +45,114 @@ export interface ProjectItem {
   budgetStatus?: string;
 }
 
+export interface ProjectGalleryItem {
+  id: number;
+  src: string;
+  alt: string;
+  title: string;
+  tag: string;
+  location: string;
+}
+
+export const ALL_PROJECT_GALLERY_IMAGES: ProjectGalleryItem[] = [
+  {
+    id: 1,
+    src: "/images/house5.jpg",
+    alt: "Mountain estate transformation in Northern Colorado",
+    title: "Mountain Estate Transformation",
+    tag: "Multi-Level Residence",
+    location: "Northern Colorado",
+  },
+  {
+    id: 2,
+    src: "/images/door-1.jpg",
+    alt: "Architectural Craftsman entry doors with brick arch",
+    title: "Craftsman Grand Entryway",
+    tag: "Custom Double Doors",
+    location: "Loveland, CO",
+  },
+  {
+    id: 3,
+    src: "/images/house2-1.jpg",
+    alt: "Modern dark siding renovation with covered entry deck and pergola",
+    title: "Modern Dark Siding & Deck",
+    tag: "Siding & Covered Deck",
+    location: "Fort Collins, CO",
+  },
+  {
+    id: 4,
+    src: "/images/house7.jpg",
+    alt: "Architectural light lap siding with patio terrace and windows",
+    title: "Architectural Lap Siding & Windows",
+    tag: "Exterior Renovation",
+    location: "Windsor, CO",
+  },
+  {
+    id: 5,
+    src: "/images/door-2.jpg",
+    alt: "Artisan dual entry doors with decorative stained glass interior view",
+    title: "Artisan Dual Entry Doors",
+    tag: "Interior Glass Detailing",
+    location: "Estes Park, CO",
+  },
+  {
+    id: 6,
+    src: "/images/house3-1.jpg",
+    alt: "High-performance Anlin energy-saving windows with fresh siding",
+    title: "High-Performance Window Wall",
+    tag: "Energy Glazing & Siding",
+    location: "Berthoud, CO",
+  },
+  {
+    id: 7,
+    src: "/images/house2-3.jpg",
+    alt: "Contemporary alpine residence with vertical dark architectural cladding and deck",
+    title: "Alpine Architectural Cladding",
+    tag: "Mountain Modern",
+    location: "Northern Colorado",
+  },
+  {
+    id: 8,
+    src: "/images/house4-1.jpg",
+    alt: "Two-story horizontal lap siding and window installation in Colorado pines",
+    title: "Two-Story Alpine Siding",
+    tag: "All-Weather Lap Siding",
+    location: "Red Feather Lakes, CO",
+  },
+  {
+    id: 9,
+    src: "/images/windows.jpg",
+    alt: "Custom replacement interior window overlooking mountain views",
+    title: "Panoramic Window Replacement",
+    tag: "Custom Frame Glazing",
+    location: "Loveland, CO",
+  },
+  {
+    id: 10,
+    src: "/images/house6-1.jpg",
+    alt: "Complete exterior siding and crisp white trim modernization",
+    title: "Exterior Siding & Trim Modernization",
+    tag: "Full Facade Update",
+    location: "Longmont, CO",
+  },
+  {
+    id: 11,
+    src: "/images/house2-2.jpg",
+    alt: "Detail of vertical board-and-batten dark siding and entry terrace",
+    title: "Vertical Board-and-Batten & Terrace",
+    tag: "Architectural Detailing",
+    location: "Fort Collins, CO",
+  },
+  {
+    id: 12,
+    src: "/images/house6-2.jpg",
+    alt: "Residential siding transformation with stone pathway",
+    title: "Curb Appeal Exterior Transformation",
+    tag: "Complete Exterior Upgrade",
+    location: "Northern Colorado",
+  },
+];
+
 export const LIMA_CONFIG = {
   company: {
     legalName: "Lima Innovations LLC",

@@ -3,8 +3,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { ServiceItem, LIMA_CONFIG } from "@/data/content";
+import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+import { ServiceItem, LIMA_CONFIG, ALL_PROJECT_GALLERY_IMAGES } from "@/data/content";
 
 interface SpatialGlassCard {
   id: string;
@@ -29,6 +29,32 @@ export function ServiceDetailExperience({ service }: ServiceDetailExperienceProp
   const [isReady, setIsReady] = useState(false);
   const [progress, setProgress] = useState(0);
   const [activeGalleryIdx, setActiveGalleryIdx] = useState<number>(0);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  const handleCardSelect = (idx: number) => {
+    setActiveGalleryIdx(idx);
+    const cardEl = cardRefs.current[idx];
+    if (cardEl && scrollContainerRef.current) {
+      cardEl.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      });
+    }
+  };
+
+  const handlePrev = () => {
+    const nextIdx =
+      (activeGalleryIdx - 1 + ALL_PROJECT_GALLERY_IMAGES.length) %
+      ALL_PROJECT_GALLERY_IMAGES.length;
+    handleCardSelect(nextIdx);
+  };
+
+  const handleNext = () => {
+    const nextIdx = (activeGalleryIdx + 1) % ALL_PROJECT_GALLERY_IMAGES.length;
+    handleCardSelect(nextIdx);
+  };
 
   const hasVideo = Boolean(service.videoUrl);
 
@@ -457,12 +483,12 @@ export function ServiceDetailExperience({ service }: ServiceDetailExperienceProp
         </section>
       )}
 
-      {/* 3. OUR LATEST CREATIONS ACCORDION GALLERY */}
+      {/* 3. OUR LATEST CREATIONS ACCORDION GALLERY - ALL REAL PROJECTS */}
       <section className="w-full flex flex-col items-center justify-start py-16 sm:py-24 bg-[#14211D] border-t border-white/10 overflow-hidden">
         <div className="max-w-3xl text-center px-4">
           <div className="inline-flex items-center gap-2 text-[#A45A2A] text-xs uppercase font-extrabold tracking-widest mb-3">
             <span className="w-2 h-2 rounded-full bg-[#A45A2A]" />
-            <span>{service.title} Portfolio</span>
+            <span>Featured Craftsmanship</span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
             Our Latest Creations
@@ -470,35 +496,85 @@ export function ServiceDetailExperience({ service }: ServiceDetailExperienceProp
           <p className="text-sm sm:text-base text-white/70 mt-3 max-w-xl mx-auto leading-relaxed">
             A visual collection of our most recent works – each piece crafted with intention, emotion, and style.
           </p>
+
+          {/* Navigation Controls */}
+          <div className="flex items-center justify-center gap-3 mt-6">
+            <button
+              type="button"
+              onClick={handlePrev}
+              aria-label="Previous project"
+              className="w-10 h-10 rounded-full bg-white/5 border border-white/15 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 hover:border-white/30 transition-all active:scale-95 cursor-pointer"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <span className="text-xs font-mono text-white/60 bg-white/5 px-3.5 py-1.5 rounded-full border border-white/10">
+              {String(activeGalleryIdx + 1).padStart(2, "0")} /{" "}
+              {String(ALL_PROJECT_GALLERY_IMAGES.length).padStart(2, "0")}
+            </span>
+            <button
+              type="button"
+              onClick={handleNext}
+              aria-label="Next project"
+              className="w-10 h-10 rounded-full bg-white/5 border border-white/15 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 hover:border-white/30 transition-all active:scale-95 cursor-pointer"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Horizontal Expandable Gallery */}
-        <div className="flex items-center gap-2 sm:gap-3 h-[420px] sm:h-[480px] w-full max-w-6xl mt-10 px-4 sm:px-6">
-          {(service.gallery && service.gallery.length > 0
-            ? service.gallery
-            : [service.image]
-          ).map((src, idx) => {
+        <div
+          ref={scrollContainerRef}
+          className="flex items-center gap-2 sm:gap-3 h-[420px] sm:h-[480px] w-full max-w-7xl mt-8 px-4 sm:px-8 overflow-x-auto no-scrollbar scroll-smooth"
+        >
+          {ALL_PROJECT_GALLERY_IMAGES.map((item, idx) => {
             const isActive = activeGalleryIdx === idx;
             return (
               <div
-                key={idx}
-                onMouseEnter={() => setActiveGalleryIdx(idx)}
-                onClick={() => setActiveGalleryIdx(idx)}
-                className={`relative group transition-all duration-500 ease-out h-[400px] sm:h-[480px] rounded-2xl overflow-hidden cursor-pointer border border-white/10 shadow-2xl ${
+                key={item.id}
+                ref={(el) => {
+                  cardRefs.current[idx] = el;
+                }}
+                onMouseEnter={() => handleCardSelect(idx)}
+                onClick={() => handleCardSelect(idx)}
+                className={`relative group transition-all duration-500 ease-out h-[400px] sm:h-[480px] rounded-2xl overflow-hidden cursor-pointer border border-white/10 shrink-0 ${
                   isActive
-                    ? "flex-[5] sm:flex-[6] min-w-[120px] sm:min-w-[280px] opacity-100 ring-1 ring-white/20"
-                    : "flex-1 min-w-[42px] sm:min-w-[64px] lg:min-w-[76px] opacity-75 hover:opacity-100"
+                    ? "w-[280px] sm:w-[460px] lg:w-[540px] opacity-100 ring-2 ring-[#A45A2A]/70 shadow-[0_20px_50px_rgba(0,0,0,0.65)]"
+                    : "w-[60px] sm:w-[76px] lg:w-[88px] opacity-75 hover:opacity-100 hover:w-[100px]"
                 }`}
               >
                 <Image
-                  src={src}
-                  alt={`${service.title} project showcase ${idx + 1}`}
+                  src={item.src}
+                  alt={item.alt}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
                   priority={idx === 0}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+                {/* Dark Vignette Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+
+                {/* Vertical Ribbon Index Number for Inactive Cards */}
+                {!isActive && (
+                  <div className="absolute top-4 left-1/2 -translate-x-1/2 font-mono text-[10px] text-white/50 bg-black/40 px-1.5 py-0.5 rounded backdrop-blur-xs pointer-events-none">
+                    {String(idx + 1).padStart(2, "0")}
+                  </div>
+                )}
+
+                {/* Expanded Card Details Badge */}
+                <div
+                  className={`absolute inset-x-0 bottom-0 p-4 sm:p-5 bg-gradient-to-t from-black/95 via-black/60 to-transparent flex flex-col justify-end pointer-events-none transition-all duration-300 ${
+                    isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
+                  }`}
+                >
+                  <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.16em] text-[#D48B55] font-bold">
+                    {item.tag} • {item.location}
+                  </span>
+                  <h4 className="text-sm sm:text-base font-bold text-white tracking-tight mt-0.5 truncate">
+                    {item.title}
+                  </h4>
+                </div>
               </div>
             );
           })}
