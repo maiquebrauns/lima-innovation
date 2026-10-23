@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Play } from "lucide-react";
+import { ScrollReveal } from "@/components/ScrollReveal";
 
 interface CategoryShowcaseItem {
   id: string;
@@ -67,7 +68,7 @@ export function ProjectsSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Editorial Header Section (Centralizado) */}
-        <div className="mb-16 sm:mb-20">
+        <ScrollReveal className="mb-16 sm:mb-20">
           <div className="pb-8 border-b border-neutral-200 text-center">
             <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#A45A2A] font-semibold block mb-3">
               Architectural Portfolio • Loveland &amp; Northern Colorado
@@ -76,12 +77,18 @@ export function ProjectsSection() {
               Craftsmanship That Speaks for Itself.
             </h2>
           </div>
-        </div>
+        </ScrollReveal>
 
         {/* Asymmetric Editorial Architecture Grid (4 Categorias com ritmo assimétrico) */}
         <div className="grid grid-cols-12 gap-x-8 gap-y-16 sm:gap-y-24 items-start">
-          {CATEGORY_SHOWCASE.map((item) => (
-            <div key={item.id} className={`${item.colSpan} ${item.offsetClass || ""} group flex flex-col`}>
+          {CATEGORY_SHOWCASE.map((item, index) => (
+            <ScrollReveal
+              key={item.id}
+              className={`${item.colSpan} ${item.offsetClass || ""} group flex flex-col`}
+              delay={index % 2 === 1 ? 140 : 0}
+              duration={850}
+              distance={32}
+            >
               <Link
                 href={item.href}
                 className="block focus:outline-none"
@@ -120,7 +127,7 @@ export function ProjectsSection() {
                   </div>
                 </div>
               </Link>
-            </div>
+            </ScrollReveal>
           ))}
         </div>
 

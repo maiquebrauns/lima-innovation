@@ -7,6 +7,7 @@ import { HeroSection } from "@/components/HeroSection";
 import { ProjectsSection } from "@/components/ProjectsSection";
 import { ServiceAreaMap } from "@/components/ServiceAreaMap";
 import { QuoteSection } from "@/components/QuoteSection";
+import { ScrollReveal } from "@/components/ScrollReveal";
 
 export default function HomePage() {
   return (
@@ -22,7 +23,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Centered Editorial Header (Mesma fonte e estilo da seção acima) */}
-          <div className="mb-12 sm:mb-16 text-center">
+          <ScrollReveal className="mb-12 sm:mb-16 text-center">
             <div className="pb-8 border-b border-neutral-200/80 max-w-4xl mx-auto">
               <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#A45A2A] font-semibold block mb-3">
                 Service Area
@@ -43,12 +44,12 @@ export default function HomePage() {
                 </a>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* Centered Wide Map */}
-          <div className="w-full max-w-6xl mx-auto">
+          <ScrollReveal delay={120} duration={800} className="w-full max-w-6xl mx-auto">
             <ServiceAreaMap />
-          </div>
+          </ScrollReveal>
 
         </div>
       </section>

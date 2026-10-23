@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Send, CheckCircle2, ShieldCheck, Phone, MapPin, ArrowUpRight, Sparkles } from "lucide-react";
 import { LIMA_CONFIG } from "@/data/content";
+import { ScrollReveal } from "@/components/ScrollReveal";
 
 export function QuoteSection() {
   const [formData, setFormData] = useState({
@@ -75,7 +76,8 @@ export function QuoteSection() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Main Architectural Split Container */}
-        <div className="rounded-3xl sm:rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl bg-[#17231F] grid grid-cols-1 lg:grid-cols-12 items-stretch">
+        <ScrollReveal duration={850} distance={36}>
+          <div className="rounded-3xl sm:rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl bg-[#17231F] grid grid-cols-1 lg:grid-cols-12 items-stretch">
           
           {/* =========================================================
               Left Side — Architectural Visual Experience
@@ -347,7 +349,8 @@ export function QuoteSection() {
             )}
           </div>
 
-        </div>
+          </div>
+        </ScrollReveal>
 
       </div>
     </div>
