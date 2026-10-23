@@ -120,13 +120,50 @@ export function ServiceAreaMap() {
       try {
         const maplibregl = await import("maplibre-gl");
 
-        // Production-quality vector style via OpenFreeMap (OpenStreetMap data)
-        // 100% free, zero API key required, hosted on Cloudflare Edge with no watermarks
-        const openFreeMapStyle = "https://tiles.openfreemap.org/styles/dark";
+        // High-performance architectural dark style using public Esri Dark Gray Canvas
+        // Completely free, zero API key required, zero watermarks, ultra-fast CDN loading
+        const darkCartoStyle: any = {
+          version: 8,
+          sources: {
+            "esri-dark-base": {
+              type: "raster",
+              tiles: [
+                "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+              ],
+              tileSize: 256,
+              attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+            },
+            "esri-dark-reference": {
+              type: "raster",
+              tiles: [
+                "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}",
+              ],
+              tileSize: 256,
+            },
+          },
+          layers: [
+            {
+              id: "esri-dark-base-layer",
+              type: "raster",
+              source: "esri-dark-base",
+              paint: {
+                "raster-opacity": 0.95,
+              },
+            },
+            {
+              id: "esri-dark-reference-layer",
+              type: "raster",
+              source: "esri-dark-reference",
+              paint: {
+                "raster-opacity": 0.9,
+              },
+            },
+          ],
+        };
 
         const map = new maplibregl.Map({
           container: mapContainerRef.current,
-          style: openFreeMapStyle,
+          style: darkCartoStyle,
           center: INITIAL_CENTER,
           zoom: INITIAL_ZOOM,
           minZoom: 8,
@@ -136,17 +173,21 @@ export function ServiceAreaMap() {
           cooperativeGestures: true, // Use Cmd/Ctrl + scroll to zoom
         });
 
-        // Add minimal compact attribution for OpenStreetMap & OpenFreeMap
+        // Add minimal compact attribution
         map.addControl(
           new maplibregl.AttributionControl({
             compact: true,
-            customAttribution:
-              '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> &copy; <a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a>',
           }),
           "bottom-right"
         );
 
+        // Instant fallback timer so the skeleton never gets stuck
+        const loadTimer = setTimeout(() => {
+          if (isMounted) setIsMapLoaded(true);
+        }, 1200);
+
         map.on("load", () => {
+          clearTimeout(loadTimer);
           if (!isMounted) return;
           setIsMapLoaded(true);
 
