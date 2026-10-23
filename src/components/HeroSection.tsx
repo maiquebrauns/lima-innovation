@@ -29,6 +29,17 @@ export function HeroSection() {
     const markReady = () => {
       duration = video.duration || duration || 10;
       setIsReady(true);
+      // Prime decoder on mobile/iOS so it never shows a black frame
+      if (video.paused && video.currentTime === 0) {
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              video.pause();
+            })
+            .catch(() => {});
+        }
+      }
       onScroll();
     };
 
@@ -44,7 +55,13 @@ export function HeroSection() {
     const apply = () => {
       ticking = false;
       if (duration > 0 && Number.isFinite(duration)) {
-        video.currentTime = target * duration;
+        if (!video.seeking) {
+          try {
+            video.currentTime = target * duration;
+          } catch {
+            // Safari rapid seeking guard
+          }
+        }
       }
       setProgress(target);
     };
@@ -91,27 +108,27 @@ export function HeroSection() {
       <div className="sticky top-0 h-screen w-full flex flex-col justify-between overflow-hidden z-20">
         
         {/* Full-bleed Background Video & Poster */}
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          {/* Poster image fallback while loading */}
+        <div className="absolute inset-0 z-0 pointer-events-none bg-[#0a0f0d]">
+          {/* Permanent high-res poster layer (ensures screen is NEVER black on mobile) */}
           <Image
             src="/assets/videos/hero-scroll-poster.jpg"
             alt="Lima Innovations Exterior Construction & Mountain Architecture"
             fill
             priority
             sizes="100vw"
-            className={`object-cover object-center transition-opacity duration-700 ${
-              isReady ? "opacity-0" : "opacity-100"
-            }`}
+            className="object-cover object-center"
           />
 
           {/* Keyframe Video bound to scroll */}
           <video
             ref={videoRef}
             src="/assets/videos/hero-scroll-keyint.mp4"
+            poster="/assets/videos/hero-scroll-poster.jpg"
             muted
             playsInline
             preload="auto"
-            className={`w-full h-full object-cover object-center transition-opacity duration-700 ${
+            aria-hidden="true"
+            className={`w-full h-full object-cover object-center transition-opacity duration-700 bg-transparent ${
               isReady ? "opacity-100" : "opacity-0"
             }`}
           />
@@ -190,8 +207,8 @@ export function HeroSection() {
         <div className="relative z-30 w-full px-5 sm:px-10 lg:px-14 pb-12 sm:pb-16">
           <div className="max-w-2xl lg:max-w-3xl space-y-4 sm:space-y-5 text-left">
             
-            {/* Location & Brand Pill */}
-            <div className="inline-flex items-center gap-2 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/15 text-xs font-semibold text-white/90">
+            {/* Location & Brand Pill (Hidden on mobile per user request) */}
+            <div className="hidden sm:inline-flex items-center gap-2 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/15 text-xs font-semibold text-white/90">
               <span className="w-2 h-2 rounded-full bg-[#A45A2A] animate-pulse" />
               <span>Loveland &amp; Northern Colorado</span>
             </div>
@@ -222,7 +239,7 @@ export function HeroSection() {
               <button
                 onClick={scrollToProjects}
                 type="button"
-                className="text-white/90 hover:text-white font-medium text-xs sm:text-sm px-4 py-3 rounded-full hover:bg-white/10 transition-all cursor-pointer backdrop-blur-sm"
+                className="hidden sm:inline-flex text-white/90 hover:text-white font-medium text-xs sm:text-sm px-4 py-3 rounded-full hover:bg-white/10 transition-all cursor-pointer backdrop-blur-sm"
               >
                 Discover the Craftsmanship &rarr;
               </button>
@@ -230,14 +247,25 @@ export function HeroSection() {
           </div>
         </div>
 
-        {/* 3. CENTERED MINIMALIST MOUSE SCROLL INDICATOR */}
-        <div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-30 pointer-events-none flex flex-col items-center gap-2">
-          <div className="w-5 h-8.5 rounded-full border-2 border-white/40 flex items-start justify-center p-1 backdrop-blur-xs">
-            <div className="w-1 h-2 bg-white/80 rounded-full animate-bounce" />
+        {/* 3. SCROLL INDICATOR: Minimal arrow on mobile, mouse on desktop */}
+        <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
+          {/* Mobile indicator: small arrow + tiny scroll text */}
+          <div className="flex sm:hidden flex-col items-center gap-0.5">
+            <span className="text-[9px] font-mono tracking-widest uppercase text-white/60 font-semibold">
+              scroll
+            </span>
+            <ChevronDown className="w-3.5 h-3.5 text-white/70 animate-bounce" />
           </div>
-          <span className="text-[10px] tracking-widest uppercase font-semibold text-white/50">
-            Scroll
-          </span>
+
+          {/* Desktop indicator: mouse icon + scroll text */}
+          <div className="hidden sm:flex flex-col items-center gap-2">
+            <div className="w-5 h-8.5 rounded-full border-2 border-white/40 flex items-start justify-center p-1 backdrop-blur-xs">
+              <div className="w-1 h-2 bg-white/80 rounded-full animate-bounce" />
+            </div>
+            <span className="text-[10px] tracking-widest uppercase font-semibold text-white/50">
+              Scroll
+            </span>
+          </div>
         </div>
 
       </div>

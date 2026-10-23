@@ -4,7 +4,8 @@ import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
-import { ServiceItem, LIMA_CONFIG, ALL_PROJECT_GALLERY_IMAGES } from "@/data/content";
+import { ServiceItem, LIMA_CONFIG, SERVICE_GALLERY_IMAGES, ALL_PROJECT_GALLERY_IMAGES } from "@/data/content";
+import { CleanServiceQuoteForm } from "@/components/CleanServiceQuoteForm";
 
 interface SpatialGlassCard {
   id: string;
@@ -31,28 +32,70 @@ export function ServiceDetailExperience({ service }: ServiceDetailExperienceProp
   const [activeGalleryIdx, setActiveGalleryIdx] = useState<number>(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const isProgrammaticScroll = useRef(false);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const galleryItems =
+    SERVICE_GALLERY_IMAGES[service.id] ||
+    ALL_PROJECT_GALLERY_IMAGES.slice(0, 6);
 
   const handleCardSelect = (idx: number) => {
     setActiveGalleryIdx(idx);
     const cardEl = cardRefs.current[idx];
-    if (cardEl && scrollContainerRef.current) {
-      cardEl.scrollIntoView({
+    const container = scrollContainerRef.current;
+    if (cardEl && container) {
+      isProgrammaticScroll.current = true;
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+
+      const cardLeft = cardEl.offsetLeft;
+      const cardWidth = cardEl.offsetWidth;
+      const containerWidth = container.offsetWidth;
+      const targetScroll = cardLeft - containerWidth / 2 + cardWidth / 2;
+
+      container.scrollTo({
+        left: Math.max(0, targetScroll),
         behavior: "smooth",
-        block: "nearest",
-        inline: "center",
       });
+
+      scrollTimeoutRef.current = setTimeout(() => {
+        isProgrammaticScroll.current = false;
+      }, 450);
+    }
+  };
+
+  // Real-time synchronization when swiping / scrolling natively (no click required on mobile)
+  const handleGalleryScroll = () => {
+    if (isProgrammaticScroll.current) return;
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const containerCenter = container.scrollLeft + container.offsetWidth / 2;
+    let closestIdx = 0;
+    let minDistance = Infinity;
+
+    cardRefs.current.forEach((el, i) => {
+      if (!el) return;
+      const elCenter = el.offsetLeft + el.offsetWidth / 2;
+      const dist = Math.abs(containerCenter - elCenter);
+      if (dist < minDistance) {
+        minDistance = dist;
+        closestIdx = i;
+      }
+    });
+
+    if (closestIdx !== activeGalleryIdx) {
+      setActiveGalleryIdx(closestIdx);
     }
   };
 
   const handlePrev = () => {
     const nextIdx =
-      (activeGalleryIdx - 1 + ALL_PROJECT_GALLERY_IMAGES.length) %
-      ALL_PROJECT_GALLERY_IMAGES.length;
+      (activeGalleryIdx - 1 + galleryItems.length) % galleryItems.length;
     handleCardSelect(nextIdx);
   };
 
   const handleNext = () => {
-    const nextIdx = (activeGalleryIdx + 1) % ALL_PROJECT_GALLERY_IMAGES.length;
+    const nextIdx = (activeGalleryIdx + 1) % galleryItems.length;
     handleCardSelect(nextIdx);
   };
 
@@ -337,25 +380,25 @@ export function ServiceDetailExperience({ service }: ServiceDetailExperienceProp
   return (
     <div className="bg-[#0a0f0d] text-white min-h-screen">
       {/* 1. TOP STICKY BAR WITH SERVICES SWITCHER */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-[#0a0f0d]/85 backdrop-blur-xl border-b border-white/10 px-4 sm:px-8 py-3.5 transition-all">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      <div className="fixed top-0 left-0 right-0 z-50 bg-[#0a0f0d]/90 backdrop-blur-xl border-b border-white/10 px-3 sm:px-8 pt-[max(0.75rem,env(safe-area-inset-top))] pb-2.5 transition-all">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-4">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-white/80 hover:text-white text-xs sm:text-sm font-bold bg-white/5 hover:bg-white/10 px-4 py-2 rounded-full border border-white/10 transition-all group shrink-0"
+            className="inline-flex items-center gap-1.5 sm:gap-2 text-white/80 hover:text-white text-xs sm:text-sm font-bold bg-white/5 hover:bg-white/10 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-white/10 transition-all group shrink-0"
           >
-            <ArrowLeft className="w-4 h-4 text-[#A45A2A] group-hover:-translate-x-1 transition-transform" />
+            <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#A45A2A] group-hover:-translate-x-1 transition-transform" />
             <span>Home</span>
           </Link>
 
           {/* Service Tabs */}
-          <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto py-1">
+          <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto no-scrollbar py-0.5">
             {LIMA_CONFIG.services.map((item) => {
               const isActive = item.id === service.id;
               return (
                 <Link
                   key={item.id}
                   href={`/services/${item.id}`}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-mono uppercase tracking-wider transition-all duration-200 whitespace-nowrap ${
+                  className={`px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-mono uppercase tracking-wider transition-all duration-200 whitespace-nowrap shrink-0 ${
                     isActive
                       ? "bg-white text-[#1F302B] font-bold shadow-sm"
                       : "text-white/70 hover:text-white hover:bg-white/10"
@@ -394,8 +437,71 @@ export function ServiceDetailExperience({ service }: ServiceDetailExperienceProp
               <div className="absolute inset-0 bg-black/10 pointer-events-none" />
             </div>
 
-            {/* FLOATING SPATIAL GLASS CARDS OVER THE VIDEO (SPACED ORGANICALLY) */}
-            <div className="absolute inset-0 pointer-events-none max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* =========================================================
+                MOBILE VIEW: DEDICATED DOCKED STEP CARD (ZERO OVERLAPPING)
+               ========================================================= */}
+            <div className="block sm:hidden absolute bottom-5 inset-x-3.5 z-30 pointer-events-auto">
+              {(() => {
+                const currentIdx = spatialCards.findIndex(
+                  (c) => progress >= c.activeRange[0] && progress < c.activeRange[1]
+                );
+                const activeIdx =
+                  currentIdx !== -1
+                    ? currentIdx
+                    : progress < spatialCards[0].activeRange[0]
+                    ? 0
+                    : spatialCards.length - 1;
+                const activeCard = spatialCards[activeIdx];
+
+                return (
+                  <div className="relative rounded-2xl p-4 bg-black/85 backdrop-blur-2xl border border-white/20 shadow-[0_16px_40px_rgba(0,0,0,0.7)] transition-all duration-300">
+                    {/* Top Segmented Step Indicator */}
+                    <div className="flex items-center justify-between gap-2 mb-2 pb-2 border-b border-white/10">
+                      <div className="flex items-center gap-1.5 flex-1">
+                        {spatialCards.map((c, i) => (
+                          <div
+                            key={c.id}
+                            className={`h-1.5 rounded-full transition-all duration-300 flex-1 ${
+                              i === activeIdx
+                                ? "bg-[#A45A2A]"
+                                : i < activeIdx
+                                ? "bg-white/40"
+                                : "bg-white/15"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      <span className="text-[10px] font-mono font-bold text-[#D48B55] bg-white/5 px-2 py-0.5 rounded-md border border-white/10 shrink-0">
+                        Step 0{activeCard.step} / 0{spatialCards.length}
+                      </span>
+                    </div>
+
+                    {/* Step Tag */}
+                    <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-white/70 font-semibold block">
+                      {activeCard.tag}
+                    </span>
+
+                    {/* Headline & Subtitle */}
+                    <h4 className="text-xl font-medium text-white tracking-tight mt-0.5 leading-tight">
+                      {activeCard.headline}
+                    </h4>
+                    <p className="text-xs font-normal text-white/75 mt-0.5">
+                      {activeCard.subtitle}
+                    </p>
+
+                    {/* Detail Description */}
+                    <p className="text-xs text-white/70 leading-relaxed mt-2 pt-2 border-t border-white/10">
+                      {activeCard.detail}
+                    </p>
+                  </div>
+                );
+              })()}
+            </div>
+
+            {/* =========================================================
+                DESKTOP VIEW: SPATIAL HUD CARDS ACROSS THE 4 CORNERS
+               ========================================================= */}
+            <div className="hidden sm:block absolute inset-0 pointer-events-none max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               {spatialCards.map((card) => {
                 const isRevealed = progress >= card.trigger;
                 const isActive = progress >= card.activeRange[0] && progress < card.activeRange[1];
@@ -484,7 +590,7 @@ export function ServiceDetailExperience({ service }: ServiceDetailExperienceProp
       )}
 
       {/* 3. OUR LATEST CREATIONS ACCORDION GALLERY - ALL REAL PROJECTS */}
-      <section className="w-full flex flex-col items-center justify-start py-16 sm:py-24 bg-[#14211D] border-t border-white/10 overflow-hidden">
+      <section className="w-full flex flex-col items-center justify-start pt-14 pb-16 sm:py-24 bg-[#14211D] border-t border-white/10 overflow-hidden">
         <div className="max-w-3xl text-center px-4">
           <div className="inline-flex items-center gap-2 text-[#A45A2A] text-xs uppercase font-extrabold tracking-widest mb-3">
             <span className="w-2 h-2 rounded-full bg-[#A45A2A]" />
@@ -507,9 +613,9 @@ export function ServiceDetailExperience({ service }: ServiceDetailExperienceProp
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
-            <span className="text-xs font-mono text-white/60 bg-white/5 px-3.5 py-1.5 rounded-full border border-white/10">
+            <span className="text-xs font-mono text-white/90 bg-white/5 px-4 py-1.5 rounded-full border border-white/10 tracking-widest font-semibold">
               {String(activeGalleryIdx + 1).padStart(2, "0")} /{" "}
-              {String(ALL_PROJECT_GALLERY_IMAGES.length).padStart(2, "0")}
+              {String(galleryItems.length).padStart(2, "0")}
             </span>
             <button
               type="button"
@@ -522,12 +628,14 @@ export function ServiceDetailExperience({ service }: ServiceDetailExperienceProp
           </div>
         </div>
 
-        {/* Horizontal Expandable Gallery */}
+        {/* Horizontal Card Carousel */}
         <div
           ref={scrollContainerRef}
-          className="flex items-center gap-2 sm:gap-3 h-[420px] sm:h-[480px] w-full max-w-7xl mt-8 px-4 sm:px-8 overflow-x-auto no-scrollbar scroll-smooth"
+          onScroll={handleGalleryScroll}
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          className="flex items-center gap-4 sm:gap-6 h-[440px] sm:h-[500px] w-full max-w-7xl mt-8 px-4 sm:px-8 overflow-x-auto overflow-y-hidden no-scrollbar [&::-webkit-scrollbar]:hidden scroll-smooth select-none snap-x snap-mandatory"
         >
-          {ALL_PROJECT_GALLERY_IMAGES.map((item, idx) => {
+          {galleryItems.map((item, idx) => {
             const isActive = activeGalleryIdx === idx;
             return (
               <div
@@ -535,43 +643,37 @@ export function ServiceDetailExperience({ service }: ServiceDetailExperienceProp
                 ref={(el) => {
                   cardRefs.current[idx] = el;
                 }}
-                onMouseEnter={() => handleCardSelect(idx)}
                 onClick={() => handleCardSelect(idx)}
-                className={`relative group transition-all duration-500 ease-out h-[400px] sm:h-[480px] rounded-2xl overflow-hidden cursor-pointer border border-white/10 shrink-0 ${
+                className={`relative group transition-all duration-300 ease-out h-[390px] sm:h-[460px] w-[84vw] max-w-[340px] sm:w-[380px] lg:w-[410px] sm:max-w-none rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer shrink-0 snap-center ${
                   isActive
-                    ? "w-[280px] sm:w-[460px] lg:w-[540px] opacity-100 ring-2 ring-[#A45A2A]/70 shadow-[0_20px_50px_rgba(0,0,0,0.65)]"
-                    : "w-[60px] sm:w-[76px] lg:w-[88px] opacity-75 hover:opacity-100 hover:w-[100px]"
+                    ? "ring-2 ring-[#A45A2A] shadow-[0_24px_50px_rgba(0,0,0,0.7)] scale-[1.01] opacity-100"
+                    : "border border-white/10 opacity-75 hover:opacity-100 hover:scale-[1.01]"
                 }`}
               >
                 <Image
                   src={item.src}
                   alt={item.alt}
                   fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  sizes="(max-width: 640px) 85vw, (max-width: 1024px) 400px, 420px"
                   className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
                   priority={idx === 0}
                 />
 
                 {/* Dark Vignette Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent pointer-events-none" />
 
-                {/* Vertical Ribbon Index Number for Inactive Cards */}
-                {!isActive && (
-                  <div className="absolute top-4 left-1/2 -translate-x-1/2 font-mono text-[10px] text-white/50 bg-black/40 px-1.5 py-0.5 rounded backdrop-blur-xs pointer-events-none">
-                    {String(idx + 1).padStart(2, "0")}
-                  </div>
-                )}
+                {/* Index Pill at Top */}
+                <div className="absolute top-4 left-4 font-mono text-[10px] text-white/90 bg-black/50 px-2.5 py-1 rounded-md border border-white/15 backdrop-blur-md pointer-events-none flex items-center gap-1.5">
+                  <span className={`w-1.5 h-1.5 rounded-full ${isActive ? "bg-[#D48B55]" : "bg-white/40"}`} />
+                  <span>{String(idx + 1).padStart(2, "0")}</span>
+                </div>
 
-                {/* Expanded Card Details Badge */}
-                <div
-                  className={`absolute inset-x-0 bottom-0 p-4 sm:p-5 bg-gradient-to-t from-black/95 via-black/60 to-transparent flex flex-col justify-end pointer-events-none transition-all duration-300 ${
-                    isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
-                  }`}
-                >
-                  <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.16em] text-[#D48B55] font-bold">
+                {/* Card Details Overlay */}
+                <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6 flex flex-col justify-end pointer-events-none transition-all duration-300">
+                  <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.16em] text-[#D48B55] font-bold leading-normal block">
                     {item.tag} • {item.location}
                   </span>
-                  <h4 className="text-sm sm:text-base font-bold text-white tracking-tight mt-0.5 truncate">
+                  <h4 className="text-base sm:text-lg font-bold text-white tracking-tight mt-1 leading-snug line-clamp-2">
                     {item.title}
                   </h4>
                 </div>
@@ -579,7 +681,27 @@ export function ServiceDetailExperience({ service }: ServiceDetailExperienceProp
             );
           })}
         </div>
+
+        {/* Dot Pagination Below */}
+        <div className="flex items-center justify-center gap-2 mt-6">
+          {galleryItems.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => handleCardSelect(i)}
+              aria-label={`Go to project ${i + 1}`}
+              className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                i === activeGalleryIdx
+                  ? "w-8 bg-[#A45A2A]"
+                  : "w-2 bg-white/20 hover:bg-white/40"
+              }`}
+            />
+          ))}
+        </div>
       </section>
+
+      {/* 4. CLEAN REDUCED QUOTE FORM SECTION */}
+      <CleanServiceQuoteForm serviceId={service.id} serviceTitle={service.title} />
     </div>
   );
 }

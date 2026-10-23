@@ -115,3 +115,19 @@
     transform: translateY(-0.12em);
   }
 }
+
+/* =========================================================================
+   Hide scrollbars utility (cross-browser: Chrome, Edge, Firefox, Safari)
+   Removes white scrollbars on Windows without losing smooth scroll functionality
+   ========================================================================= */
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none !important; /* IE and Edge */
+  scrollbar-width: none !important; /* Firefox */
+}
+

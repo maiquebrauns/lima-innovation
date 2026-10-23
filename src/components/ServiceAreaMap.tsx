@@ -120,6 +120,11 @@ export function ServiceAreaMap() {
       try {
         const maplibregl = await import("maplibre-gl");
 
+        // Explicitly set self-hosted worker to prevent Next.js/Turbopack bundler worker URL 404
+        if (typeof window !== "undefined" && typeof maplibregl.setWorkerUrl === "function") {
+          maplibregl.setWorkerUrl("/maplibre-gl-worker.mjs");
+        }
+
         // High-contrast, crystal-clear OpenStreetMap basemap
         // Ultra-fast global CDN, zero API keys, fully visible road networks and towns
         const osmStyle: any = {
@@ -181,6 +186,11 @@ export function ServiceAreaMap() {
           }),
           "bottom-right"
         );
+
+        // Catch and handle map events gracefully to prevent unhandled overlay exceptions
+        map.on("error", (e) => {
+          console.warn("MapLibre event:", e?.error?.message || e);
+        });
 
         // Safety fallback timer so loading skeleton never hangs
         const loadTimer = setTimeout(() => {

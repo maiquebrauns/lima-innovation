@@ -14,6 +14,8 @@ export function Navbar() {
   const isHome = pathname === "/";
 
   useEffect(() => {
+    if (pathname.startsWith("/services/")) return;
+
     const handleScroll = () => {
       if (isHome) {
         // Na Home, só exibe a barra fixa quando o usuário passar do Hero e chegar na segunda seção (#projects)
@@ -32,7 +34,7 @@ export function Navbar() {
     window.addEventListener("scroll", handleScroll);
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isHome, pathname]);
 
   // Close mobile drawer on route change
   useEffect(() => {
@@ -80,6 +82,12 @@ export function Navbar() {
       return () => clearTimeout(timer);
     }
   }, [pathname]);
+
+  // Dedicated service experience has its own specialized sticky navigation bar
+  // (evaluated AFTER all hooks to adhere to React Rules of Hooks)
+  if (pathname.startsWith("/services/")) {
+    return null;
+  }
 
   const isSolid = !isHome || isScrolled;
 

@@ -153,6 +153,216 @@ export const ALL_PROJECT_GALLERY_IMAGES: ProjectGalleryItem[] = [
   },
 ];
 
+/**
+ * 6 curated, themed high-resolution photos per service
+ * Perfectly matches each service's architectural specialty in Northern Colorado
+ */
+export const SERVICE_GALLERY_IMAGES: Record<string, ProjectGalleryItem[]> = {
+  windows: [
+    {
+      id: 1,
+      src: "/assets/images/custom-window-replacement-showcase.jpg",
+      alt: "Custom residential window replacement in Loveland, CO",
+      title: "Custom Low-E Window Replacement",
+      tag: "Panoramic Mountain Glazing",
+      location: "Loveland, CO",
+    },
+    {
+      id: 2,
+      src: "/images/house3-1.jpg",
+      alt: "High-performance energy saving windows with dark frames in Berthoud, CO",
+      title: "High-Performance Energy Window Wall",
+      tag: "Double-Hung Low-E",
+      location: "Berthoud, CO",
+    },
+    {
+      id: 3,
+      src: "/images/windows.jpg",
+      alt: "Custom replacement interior window overlooking mountain views in Estes Park, CO",
+      title: "Alpine Vista Picture Windows",
+      tag: "Thermal Framing",
+      location: "Estes Park, CO",
+    },
+    {
+      id: 4,
+      src: "/assets/images/after-windows.jpg",
+      alt: "Full-frame energy star replacement windows in Fort Collins, CO",
+      title: "Full-Frame Efficiency Upgrade",
+      tag: "Energy Star Glazing",
+      location: "Fort Collins, CO",
+    },
+    {
+      id: 5,
+      src: "/assets/images/gallery-windows-frame-1.jpg",
+      alt: "Precision casement window installation in Windsor, CO",
+      title: "Architectural Casement Windows",
+      tag: "Weather-Sealed Fit",
+      location: "Windsor, CO",
+    },
+    {
+      id: 6,
+      src: "/assets/images/project-4.jpg",
+      alt: "Modern residential bedroom and living windows in Longmont, CO",
+      title: "Triple-Pane Glazing Package",
+      tag: "Acoustic & UV Defense",
+      location: "Longmont, CO",
+    },
+  ],
+
+  doors: [
+    {
+      id: 1,
+      src: "/images/door-1.jpg",
+      alt: "Architectural Craftsman entry doors with brick arch in Loveland, CO",
+      title: "Craftsman Grand Entryway",
+      tag: "Custom Double Doors",
+      location: "Loveland, CO",
+    },
+    {
+      id: 2,
+      src: "/images/door-2.jpg",
+      alt: "Artisan dual entry doors with decorative stained glass in Estes Park, CO",
+      title: "Artisan Dual Entry Doors",
+      tag: "Decorative Stained Glass",
+      location: "Estes Park, CO",
+    },
+    {
+      id: 3,
+      src: "/assets/images/architectural-entryway-door-showcase.jpg",
+      alt: "Solid wood architectural front door with satin nickel hardware in Loveland, CO",
+      title: "Architectural Front Entry Door",
+      tag: "Precision Wood Craftsmanship",
+      location: "Loveland, CO",
+    },
+    {
+      id: 4,
+      src: "/assets/images/after-doors.jpg",
+      alt: "High-security insulated fiberglass front door in Northern Colorado",
+      title: "High-Security Insulated Entrance",
+      tag: "Multi-Point Deadbolt",
+      location: "Northern Colorado",
+    },
+    {
+      id: 5,
+      src: "/assets/images/service-doors.jpg",
+      alt: "Seamless sliding patio glass door system in Fort Collins, CO",
+      title: "Smooth-Gliding Patio Sliders",
+      tag: "Indoor-Outdoor Living",
+      location: "Fort Collins, CO",
+    },
+    {
+      id: 6,
+      src: "/assets/images/project-5.jpg",
+      alt: "Contemporary exterior front door with glass sidelight in Windsor, CO",
+      title: "Modern Entry with Glass Sidelight",
+      tag: "Thermal Core Construction",
+      location: "Windsor, CO",
+    },
+  ],
+
+  siding: [
+    {
+      id: 1,
+      src: "/assets/images/complete-siding-trim-showcase.jpg",
+      alt: "Complete exterior siding and architectural trim renovation in Loveland, CO",
+      title: "Complete Siding & Trim Modernization",
+      tag: "All-Weather Fiber Cement",
+      location: "Loveland, CO",
+    },
+    {
+      id: 2,
+      src: "/assets/images/siding-nova.jpg",
+      alt: "Modern dark panel siding renovation with covered entry in Fort Collins, CO",
+      title: "Modern Dark Cladding Facade",
+      tag: "Architectural Panels",
+      location: "Fort Collins, CO",
+    },
+    {
+      id: 3,
+      src: "/assets/images/after-siding.jpg",
+      alt: "Residential exterior siding transformation with crisp trim in Longmont, CO",
+      title: "Engineered Wood Lap Siding",
+      tag: "Hail & UV Defense",
+      location: "Longmont, CO",
+    },
+    {
+      id: 4,
+      src: "/assets/images/siding-etapa-3-finalizado.jpg",
+      alt: "Laser-aligned fiber cement siding with mitered trim in Berthoud, CO",
+      title: "Precision Mitered Trim Cladding",
+      tag: "Moisture Barrier HardieWrap",
+      location: "Berthoud, CO",
+    },
+    {
+      id: 5,
+      src: "/images/house2-2.jpg",
+      alt: "Vertical board-and-batten dark siding in Windsor, CO",
+      title: "Vertical Board-and-Batten Accent",
+      tag: "Mountain Modern",
+      location: "Windsor, CO",
+    },
+    {
+      id: 6,
+      src: "/images/house4-1.jpg",
+      alt: "Two-story horizontal lap siding in Colorado pines in Red Feather Lakes, CO",
+      title: "Two-Story Alpine Lap Siding",
+      tag: "Full Facade Envelope",
+      location: "Red Feather Lakes, CO",
+    },
+  ],
+
+  decks: [
+    {
+      id: 1,
+      src: "/assets/images/colorado-mountain-view-deck-showcase.jpg",
+      alt: "Custom elevated timber outdoor deck overlooking Colorado foothills in Loveland, CO",
+      title: "Colorado Mountain View Timber Deck",
+      tag: "Heavy-Timber Framework",
+      location: "Loveland, CO",
+    },
+    {
+      id: 2,
+      src: "/assets/images/colorado-deck-showcase.jpg",
+      alt: "Multi-level cedar deck for outdoor entertaining in Fort Collins, CO",
+      title: "Multi-Level Outdoor Living Deck",
+      tag: "Natural Cedar & Redwood",
+      location: "Fort Collins, CO",
+    },
+    {
+      id: 3,
+      src: "/assets/images/after-decks.jpg",
+      alt: "Finished multi-level deck overlooking mountain view in Estes Park, CO",
+      title: "Custom Elevated Alpine Deck",
+      tag: "Snow Load Engineered",
+      location: "Estes Park, CO",
+    },
+    {
+      id: 4,
+      src: "/assets/images/project-6.jpg",
+      alt: "Low-maintenance composite deck with integrated railings in Windsor, CO",
+      title: "Low-Maintenance Composite Decking",
+      tag: "Concealed Fastener System",
+      location: "Windsor, CO",
+    },
+    {
+      id: 5,
+      src: "/assets/images/gallery-decks-frame-2.jpg",
+      alt: "Glulam beam framing with helical pier foundation in Red Feather Lakes, CO",
+      title: "Engineered Helical Framing Deck",
+      tag: "Frost-Line Pier Support",
+      location: "Red Feather Lakes, CO",
+    },
+    {
+      id: 6,
+      src: "/assets/images/service-decks.jpg",
+      alt: "Finished residential deck with slimline cable railing in Berthoud, CO",
+      title: "Modern Deck with Slimline Railings",
+      tag: "Integrated Lighting & Stairs",
+      location: "Berthoud, CO",
+    },
+  ],
+};
+
 export const LIMA_CONFIG = {
   company: {
     legalName: "Lima Innovations LLC",
