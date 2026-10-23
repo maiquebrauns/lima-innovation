@@ -584,10 +584,10 @@ export const LIMA_CONFIG = {
       videoUrl: "/assets/videos/decks-scroll-keyint.mp4",
       videoPoster: "/assets/videos/decks-poster.jpg",
       videoCaptions: [
-        { text: "Engineered helical footings and load-bearing framing.", start: 0.05, end: 0.28 },
-        { text: "Heavy timber glulam beams built for snow loads.", start: 0.30, end: 0.52 },
-        { text: "Concealed fastener decking with slimline balusters.", start: 0.55, end: 0.78 },
-        { text: "Designed for 300 days of Colorado sunshine.", start: 0.80, end: 0.98 }
+        { text: "Precision vertical posts and anchor foundation.", start: 0.05, end: 0.28 },
+        { text: "Heavy timber rim joists and reinforced floor frame.", start: 0.30, end: 0.52 },
+        { text: "Premium cedar decking layout and stair stringers.", start: 0.55, end: 0.78 },
+        { text: "Completed balustrade railing and integrated stairs.", start: 0.80, end: 0.98 }
       ],
       roadmap: [
         {

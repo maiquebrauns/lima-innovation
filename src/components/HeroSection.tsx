@@ -155,9 +155,9 @@ export function HeroSection() {
             />
           </div>
 
-          {/* Vignette gradients for text legibility and clean borders */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f0d] via-black/35 to-black/60" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/30 to-transparent" />
+          {/* Vignette gradients for text legibility and clean borders: tuned to keep full natural color vibrance */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f0d] via-black/20 sm:via-black/35 to-black/40 sm:to-black/60" />
+          <div className="hidden sm:block absolute inset-0 bg-gradient-to-r from-black/75 via-black/30 to-transparent" />
         </div>
 
         {/* 1. TOP HEADER BAR: Logo pill + Nav menu pill + CTA pill + Sound toggle */}
