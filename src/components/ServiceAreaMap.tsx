@@ -139,11 +139,19 @@ export function ServiceAreaMap() {
           },
           layers: [
             {
+              id: "osm-bg",
+              type: "background",
+              paint: {
+                "background-color": "#f2efe9",
+              },
+            },
+            {
               id: "osm-layer",
               type: "raster",
               source: "osm-tiles",
               paint: {
                 "raster-opacity": 0.95,
+                "raster-fade-duration": 0,
               },
             },
           ],
@@ -154,8 +162,13 @@ export function ServiceAreaMap() {
           style: osmStyle,
           center: INITIAL_CENTER,
           zoom: INITIAL_ZOOM,
-          minZoom: 8,
-          maxZoom: 14,
+          minZoom: 8.5,
+          maxZoom: 13.5,
+          maxBounds: [
+            [-105.7, 39.8], // Southwest bound (Longmont/Boulder foothills)
+            [-104.2, 40.9], // Northeast bound (Fort Collins/Greeley plains)
+          ],
+          fadeDuration: 0,
           attributionControl: false,
           scrollZoom: false, // Prevent intercepting page scroll on mobile
           cooperativeGestures: true, // Use Cmd/Ctrl + scroll to zoom
@@ -391,7 +404,7 @@ export function ServiceAreaMap() {
   return (
     <div className="w-full flex flex-col gap-4">
       {/* 1. MAP CANVAS CONTAINER */}
-      <div className="relative w-full h-[500px] sm:h-[540px] lg:h-[580px] rounded-2xl overflow-hidden bg-[#14221D] border border-[#2D443D] shadow-2xl">
+      <div className="relative w-full h-[500px] sm:h-[540px] lg:h-[580px] rounded-2xl overflow-hidden bg-[#0e1016] border border-[#2D443D] shadow-2xl">
         
         {/* Map Canvas - High-contrast architectural OpenStreetMap basemap */}
         <div 
@@ -525,15 +538,15 @@ export function ServiceAreaMap() {
               onClick={() => focusCity(loc)}
               className={`p-3 rounded-xl border text-left transition-all duration-200 cursor-pointer flex flex-col justify-between ${
                 isSelected
-                  ? "bg-[#1F302B] text-white border-[#A45A2A] shadow-md ring-1 ring-[#A45A2A]/40"
-                  : "bg-white text-neutral-800 border-neutral-200 hover:border-[#A45A2A]/60 hover:bg-neutral-50"
+                  ? "bg-[#1F302B] text-white border-[#1F302B] shadow-md"
+                  : "bg-white text-neutral-800 border-neutral-200 hover:border-neutral-300 hover:bg-neutral-50"
               }`}
             >
               <div className="flex items-center justify-between w-full mb-1">
                 <MapPin
                   className={`w-3.5 h-3.5 ${
                     isSelected
-                      ? "text-[#A45A2A]"
+                      ? "text-white/80"
                       : loc.isPrimary
                       ? "text-[#A45A2A]"
                       : "text-neutral-400"
@@ -543,7 +556,7 @@ export function ServiceAreaMap() {
                   <span
                     className={`text-[9px] font-mono uppercase tracking-wider font-bold px-1.5 py-0.2 rounded ${
                       isSelected
-                        ? "bg-[#A45A2A] text-white"
+                        ? "bg-white/20 text-white"
                         : "bg-[#1F302B] text-white"
                     }`}
                   >
