@@ -5,6 +5,7 @@ import { ArrowRight, CheckCircle, MapPin } from "lucide-react";
 import { LIMA_CONFIG } from "@/data/content";
 import { HeroSection } from "@/components/HeroSection";
 import { ProjectsSection } from "@/components/ProjectsSection";
+import { ServiceAreaMap } from "@/components/ServiceAreaMap";
 import { QuoteSection } from "@/components/QuoteSection";
 
 export default function HomePage() {
@@ -42,39 +43,7 @@ export default function HomePage() {
             </div>
 
             <div className="lg:col-span-7">
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                {LIMA_CONFIG.serviceAreas.map((area, idx) => (
-                  <div
-                    key={idx}
-                    className={`p-5 rounded-2xl border transition-all ${
-                      area.isPrimary
-                        ? "bg-[#1F302B] text-white border-[#1F302B] shadow-md"
-                        : "bg-white text-neutral-900 border-neutral-200 hover:border-[#A45A2A]"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <MapPin
-                        className={`w-5 h-5 ${
-                          area.isPrimary ? "text-[#A45A2A]" : "text-neutral-400"
-                        }`}
-                      />
-                      {area.isPrimary && (
-                        <span className="text-[10px] font-bold uppercase tracking-wider bg-white/10 px-2 py-0.5 rounded">
-                          Hub
-                        </span>
-                      )}
-                    </div>
-                    <div className="font-extrabold text-base">{area.city}</div>
-                    <div
-                      className={`text-xs mt-1 ${
-                        area.isPrimary ? "text-white/70" : "text-neutral-500"
-                      }`}
-                    >
-                      {area.note}
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <ServiceAreaMap />
             </div>
           </div>
         </div>
